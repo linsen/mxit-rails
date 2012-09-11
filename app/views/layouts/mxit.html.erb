@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @title %></title>
+</head>
+<body>
+
+<h1><%= @title %></h1>
+<% if @nav_link %>
+  <p><%= mxit_link @nav_target, @nav_link.to_s.capitalize %></p>
+<% end %>
+
+<%= yield %>
+
+<% if @input %>
+  <p><b>&gt; <%= @input_label %></b></p>
+  <form method="POST" action="/<%= @route %>">
+      <input type="text" name="<%= @input %>" />
+      <input type="submit" name="submit" value="Proceed" />
+  </form>
+<% elsif @proceed %>
+  <p><b>&gt; <%= mxit_link @proceed, @proceed_label.to_s.capitalize %></b></p>
+<% end %>
+
+</body>
+</html>
