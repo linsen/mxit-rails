@@ -10,8 +10,14 @@ Gem::Specification.new do |s|
   s.authors     = ["Linsen Loots"]
   s.email       = ["linsen.loots@gmail.com"]
   s.homepage    = "https://github.com/linsen/mxit-rails"
-  s.summary     = "A gem to make creating mxit apps in Rails fast and pleasant."
-  s.description = "A gem to make creating mxit apps in Rails fast and pleasant."
+  s.summary     = "Templating and libraries for making Mxit apps in Rails"
+  s.description = <<-EOF
+    A gem that includes a simple and opinionated templating framework for Rails-based Mxit apps.
+    This includes a rough layout, support for styles similar to CSS classes, wrapped inputs, and
+    an elegant way to support Mxit's conversation-based interface.
+
+    Later versions will also include wrappers for important Mxit APIs.
+  EOF
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
