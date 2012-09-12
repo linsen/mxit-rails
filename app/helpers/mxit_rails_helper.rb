@@ -1,7 +1,12 @@
-module MxitHelper
+module MxitRailsHelper
+
+  def mxit_path route
+    MxitRails::Router.url route
+  end
 
   def mxit_link route, label
-    output = "<a href=\"/#{route.to_s}\">#{label}</a>".html_safe
+    path = mxit_path route
+    output = "<a href=\"#{path}\">#{label}</a>".html_safe
   end
 
   def mxit_style *names

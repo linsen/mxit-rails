@@ -3,7 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 
 Bundler.require
-require "mxit-rails"
+require "mxit_rails"
 
 module Dummy
   class Application < Rails::Application
@@ -51,6 +51,10 @@ module Dummy
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Mxit app's root path - will be placed relative to the application's root path
+    config.mxit_root = 'mxit'
+    config.mxit_template_root = 'mxit'
   end
 end
 

@@ -1,3 +1,6 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+
+  mxit_style :link, 'color: red;'
+  mxit_style :title, 'background-color: pink'
+
 end

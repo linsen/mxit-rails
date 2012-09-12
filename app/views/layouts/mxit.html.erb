@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= @title %></title>
+  <title><%= @_mxit.title %></title>
 </head>
 <body>
 
-<h1><%= @title %></h1>
-<% if @nav_link %>
-  <p><%= mxit_link @nav_target, @nav_link.to_s.capitalize %></p>
+<h1><%= @_mxit.title %></h1>
+<% if @_mxit.nav_link %>
+  <p><%= mxit_link @_mxit.nav_target, @_mxit.nav_link.to_s.capitalize %></p>
 <% end %>
 
 <%= yield %>
 
-<% if @input %>
-  <p><b>&gt; <%= @input_label %></b></p>
-  <form method="POST" action="/<%= @route %>">
-      <input type="text" name="<%= @input %>" />
+<% if @_mxit.input %>
+  <p><b>&gt; <%= @_mxit.input_label %></b></p>
+  <form method="POST" action="<%= @_mxit.url %>">
+      <input type="text" name="<%= @_mxit.input %>" />
       <input type="submit" name="submit" value="Proceed" />
   </form>
-<% elsif @proceed %>
-  <p><b>&gt; <%= mxit_link @proceed, @proceed_label.to_s.capitalize %></b></p>
+
+<% elsif @_mxit.proceed %>
+  <p><b>&gt; <%= mxit_link @_mxit.proceed, @_mxit.proceed_label.to_s.capitalize %></b></p>
 <% end %>
 
 </body>
