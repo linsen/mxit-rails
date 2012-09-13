@@ -50,6 +50,8 @@ module MxitRails
     end
 
     def index
+      get_mxit_info
+      
       whitelisted = []
       if session[:_mxit_rails_form] == descriptor.name
         whitelisted = [:_mxit_rails_form, :_mxit_rails_step, :_mxit_rails_form_complete, :_mxit_rails_params]

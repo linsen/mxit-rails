@@ -2,6 +2,8 @@ module MxitRails
   module Page
     extend ActiveSupport::Concern
 
+    attr_accessor :mxit_params
+
     included do
       if self.ancestors.include? ApplicationController
         @descriptor = MxitRails::Descriptor.new controller_name
@@ -59,12 +61,26 @@ module MxitRails
       end
     end
 
+    def get_mxit_header_field key
+      request.headers[key] || cookies[key.downcase]
+    end
+
+    def get_mxit_info
+      mxit_params = {}
+      mxit_params[:user_id] = get_mxit_header_field 'X-Mxit-UserId-R'
+      mxit_params[:mxit_id] = get_mxit_header_field 'x-mxit-login'
+
+      device_info = get_mxit_header_field('X-Mxit-Device-Info').split(',')
+      mxit_params[:distribution_code] = device_info.first
+      mxit_params[:mobile_number] = device_info[1] if device_info.length == 2
+    end
 
 
     # Rails controller stuff
     #========================
 
     def index
+      get_mxit_info
       clear_session
 
       if params.include?(:_mxit_rails_submit)

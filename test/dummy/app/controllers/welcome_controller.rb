@@ -15,8 +15,6 @@ class WelcomeController < ApplicationController
     @time = Time.now.strftime '%H:%M:%S on %A'
   end
 
-  proceed :success
-
   submit do
     @phone_number = params[:phone_number]
     
@@ -33,6 +31,8 @@ class WelcomeController < ApplicationController
     end
 
     logger.info "This won't execute if an error occurred or if error! or redirect! was called"
+
+    redirect! :success
   end
 
 
