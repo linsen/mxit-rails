@@ -54,7 +54,6 @@ module Dummy
 
     # Mxit app's root path - will be placed relative to the application's root path
     config.mxit_root = 'mxit'
-    config.mxit_template_root = 'mxit'
   end
 end
 
