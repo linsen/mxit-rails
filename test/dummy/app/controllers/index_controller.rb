@@ -2,7 +2,9 @@ class IndexController < ApplicationController
 
   include MxitRails::Page
 
-  title 'Templater'
-  done :index
+  def index
+    title 'Templater'
+    done :index
+  end
 
 end
