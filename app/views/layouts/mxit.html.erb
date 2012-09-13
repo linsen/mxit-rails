@@ -1,27 +1,46 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
   <title><%= @_mxit.title %></title>
+
+  <meta name="mxit" content="no_prefix,show_progress,clear_on_new,no_heading" />
+
+  <style type="text/css">
+    a:hover { <%= mxit_style :link_hover %> }
+    a { <%= mxit_style :link %> }
+  </style>
 </head>
-<body>
 
-<h1><%= @_mxit.title %></h1>
-<% if @_mxit.nav_link %>
-  <p><%= mxit_link @_mxit.nav_target, @_mxit.nav_link.to_s.capitalize %></p>
-<% end %>
+<body style="<%= mxit_style :body %>">
 
-<%= yield %>
 
-<% if @_mxit.input %>
-  <p><b>&gt; <%= @_mxit.input_label %></b></p>
-  <form method="POST" action="<%= @_mxit.url %>">
-      <input type="text" name="<%= @_mxit.input %>" />
-      <input type="submit" name="_mxit_rails_submit" value="Proceed" />
-  </form>
+  <table title="mxit:table:full" style="width:100%" name="title_table">
+    <colgroup span="1" width="100%"></colgroup>
+    <tr>
+      <td style="<%= mxit_style :title %>">
+        <b><%= @_mxit.title %></b>
+      </td>
+    </tr>
+  </table>
 
-<% elsif @_mxit.proceed %>
-  <p><b>&gt; <%= mxit_link @_mxit.proceed, @_mxit.proceed_label.to_s.capitalize, {_mxit_rails_submit: 'Proceed'} %></b></p>
-<% end %>
+  <% if @_mxit.nav_link %>
+    <p style="<%= mxit_style :right %>"><%= mxit_link @_mxit.nav_target, @_mxit.nav_link.to_s.capitalize %></p>
+  <% end %>
+
+  <%= yield %>
+
+  <% if @_mxit.input %>
+    <p><b style="<%= mxit_style :link %>">&gt; <%= @_mxit.input_label %></b></p>
+    <form method="POST" action="<%= @_mxit.url %>">
+        <input type="text" name="<%= @_mxit.input %>" />
+        <input type="submit" name="_mxit_rails_submit" value="Proceed" />
+    </form>
+
+  <% elsif @_mxit.proceed %>
+    <p><b style="<%= mxit_style :link %>">&gt; <%= mxit_link @_mxit.proceed, @_mxit.proceed_label.to_s.capitalize, {_mxit_rails_submit: 'Proceed'} %></b></p>
+  <% end %>
 
 </body>
 </html>

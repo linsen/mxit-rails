@@ -22,7 +22,7 @@ module MxitRailsHelper
     names.each do |name|
       content << MxitRails::Styles.get(name) || ''
     end
-    "style=\"#{ content.join(' ') }\"".html_safe
+    content.join(' ').html_safe
   end
 
 end

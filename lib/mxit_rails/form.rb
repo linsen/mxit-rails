@@ -60,6 +60,10 @@ module MxitRails
       session[:_mxit_rails_form_complete] ||= false
       session[:_mxit_rails_params] ||= {}
 
+      # Ensure previous inputs are in the params hash
+      session[:_mxit_rails_params].each do |key, value|
+        params[key.to_sym] = value
+      end
 
       if params.include?(:_mxit_rails_submit)
         # Validate the current input if present
@@ -67,11 +71,6 @@ module MxitRails
           input = descriptor.input.to_sym
           validate! params[input]
           session[:_mxit_rails_params][input] = params[input]
-        end
-
-        # Ensure previous inputs are in the params hash
-        session[:_mxit_rails_params].each do |key, value|
-          params[key.to_sym] = value
         end
 
         submit_block()

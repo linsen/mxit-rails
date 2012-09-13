@@ -6,4 +6,6 @@ Rails.application.routes.draw do
     match '/', :controller => 'index', :action => 'index'
   end
 
+  match '/emulator', :controller => 'emulator', :action => 'index'
+
 end

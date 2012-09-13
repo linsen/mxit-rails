@@ -16,5 +16,10 @@ module MxitRails
       StyleList[name.to_sym] = content
     end
 
+    # Default styles
+    add :left, 'text-align:left;'
+    add :center, 'text-align:center;'
+    add :right, 'text-align:right;'
+
   end
 end

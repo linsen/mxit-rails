@@ -68,8 +68,10 @@ module MxitRails
       clear_session
 
       if params.include?(:_mxit_rails_submit)
-        input = descriptor.input.to_sym
-        validate! params[input]
+        unless descriptor.input.nil?
+          input = descriptor.input.to_sym
+          validate! params[input]
+        end
         submit_block()
         redirect! descriptor.proceed
       end

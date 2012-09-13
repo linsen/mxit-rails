@@ -18,6 +18,8 @@ class WelcomeController < ApplicationController
   proceed :success
 
   submit do
+    @phone_number = params[:phone_number]
+    
     if @phone_number == 'easter egg'
       redirect! :easter_egg
 

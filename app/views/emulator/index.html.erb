@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mxit Emulator</title>
+    <meta charset="UTF-8" />
+
+    <%= stylesheet_link_tag "mxit_rails/emulator" %>
+    <%= javascript_include_tag "mxit_rails/emulator" %>
+
+    <script type="text/javascript">
+      MXIT_ROOT = '<%= Rails.application.config.mxit_root %>';
+    </script>
+
+    <!-- The asset image-path helper isn't working in scss files, so moving those to here. sigh. -->
+    <style type="text/css">
+      #phone { background: url(<%= image_path("mxit_rails/nokia-5310-frame.png") %>) no-repeat; }
+      .go > .icon .image  { background-image: url(<%= image_path("mxit_rails/go.png");  %>) }
+      .in > .icon .image  { background-image: url(<%= image_path("mxit_rails/in.png");  %>) }
+      .out > .icon .image { background-image: url(<%= image_path("mxit_rails/out.png"); %>) }
+    </style>
+</head>
+<body>
+
+  <div id="controls">
+    <div id="default">
+      <span id="not-registered">No credentials</span>
+      <span id="registered">Mxit ID: <span id="mxit-id"></span></span>
+
+      <a id="unlink" class="go link" onclick="Emulator.clearCredentials()">Clear Credentials <span class="icon"><span class="image"></span></span></a>
+      <a id="link" class="go link" onclick="Emulator.enterCredentials()">Set Credentials <span class="icon"><span class="image"></span></span></a>
+    </div>
+
+    <div id="inputs">
+      <input type="text" placeholder="Mxit ID" id="mxit-id-input" />
+      <input type="text" placeholder="MSISDN" id="msisdn-input" />
+
+      <a id="link" class="go link" onclick="Emulator.saveCredentials()">Save <span class="icon"><span class="image"></span></span></a>
+    </div>
+  </div>
+
+  <div id="phone">
+    <a id="expand" class="out link" onclick="Emulator.expand()"><span class="icon"><span class="image"></span></span></a>
+    <a id="collapse" class="in link" onclick="Emulator.collapse()"><span class="icon"><span class="image"></span></span></a>
+    <div id="screen">
+      <iframe id="center" class="content"></iframe>
+    </div>
+  </div>
+
+</body>
+</html>
