@@ -10,7 +10,7 @@ html, body {
   width: 240px;
   height: 320px;
   padding: 133px 56px 351px 56px;
-  margin: 32px auto 0 auto;
+  margin: 35px auto 0 auto;
   position: relative;
 }
 #phone.collapse {
@@ -163,6 +163,12 @@ a.link {
   display: block;
 }
 
-#pDebug #pDebugToolbarHandle {
-  top: 100px !important;
+#fadeout {
+  position: fixed;
+  height: 100px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: -webkit-linear-gradient(90deg, #fff 0%, #fff 5%, rgba(255,255,255,0.95) 15%, rgba(255,255,255,0) 100%);;
+  z-index: 10;
 }

@@ -62,10 +62,12 @@ Emulator = (function() {
 
     collapse: function() {
       $('#phone').removeClass('collapse');
+      $('#fadeout').show();
     },
 
     expand: function() {
       $('#phone').addClass('collapse');
+      $('#fadeout').hide();
     },
   }
 })();
