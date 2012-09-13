@@ -3,12 +3,12 @@ module MxitRails
     extend ActiveSupport::Concern
 
     included do
-      @descriptor = MxitRails::Descriptor.new controller_name
+      if self.ancestors.include? ApplicationController
+        @descriptor = MxitRails::Descriptor.new controller_name
 
-      send :rescue_from, MxitRails::Exception, :with => :handle_mxit_exception
-      send :layout, 'mxit'
-      send :before_filter, :init_template
-
+        send :rescue_from, MxitRails::Exception, :with => :handle_mxit_exception
+        send :layout, 'mxit'
+      end
     end
 
     def descriptor
@@ -19,15 +19,14 @@ module MxitRails
       raise MxitRails::Exception.new(message, code)
     end
 
-    def redirect! route, step=nil
+    def redirect! route
       exception = MxitRails::RedirectException.new('', :redirect)
       exception.route = route
-      exception.step = step
       raise exception
     end
 
-    def redirect_to route, step=nil
-      super MxitRails::Router.url(route, step)
+    def redirect_to route
+      super MxitRails::Router.url(route)
     end
 
     def validate! input
@@ -42,20 +41,22 @@ module MxitRails
       end
     end
 
-    def render_block
-      if descriptor.render?
-        block = descriptor.render
-        instance_eval &block
-      end
+    def render_block current_descriptor=nil
+      current_descriptor ||= descriptor
+      instance_eval &current_descriptor.render if descriptor.render?
     end
-    def submit_block
-      instance_eval &descriptor.submit if descriptor.submit?
+    def submit_block current_descriptor=nil
+      current_descriptor ||= descriptor
+      instance_eval &current_descriptor.submit if descriptor.submit?
     end
 
-    # Initializer for the controller instance
-    #=========================================
-    def init_template
-      @_mxit = descriptor
+    def clear_session whitelisted=[]
+      whitelisted.map! {|item| item.to_sym}
+      session.each do |key, value|
+        if (key.to_s.match /_mxit_rails_/) && !whitelisted.include?(key.to_sym)
+          session[key] = nil
+        end
+      end
     end
 
 
@@ -64,26 +65,29 @@ module MxitRails
     #========================
 
     def index
-      if params.include?(:submit)
+      clear_session
+
+      if params.include?(:_mxit_rails_submit)
         input = descriptor.input.to_sym
         validate! params[input]
-        instance_variable_set("@#{input}", params[input])
         submit_block()
         redirect! descriptor.proceed
       end
 
       render_block()
-      render descriptor.url
+      @_mxit = descriptor
+      render descriptor.view
     end
 
     def render_error message
       @_mxit_error_message = message
+      @_mxit = descriptor
       render "mxit_rails/error"
     end
 
     def handle_mxit_exception exception
       if exception.kind_of? MxitRails::RedirectException 
-        redirect_to(exception.route, exception.step) and return
+        redirect_to(exception.route) and return
 
       elsif exception.kind_of? MxitRails::Exception
         render_error exception.message
@@ -143,7 +147,7 @@ module MxitRails
         descriptor.input = input_name
         descriptor.input_label = input_label
       end
-      def proceed target, label = nil
+      def proceed target, label=nil
         descriptor.proceed = target
         descriptor.proceed_label = label
       end

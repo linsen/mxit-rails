@@ -16,11 +16,11 @@
   <p><b>&gt; <%= @_mxit.input_label %></b></p>
   <form method="POST" action="<%= @_mxit.url %>">
       <input type="text" name="<%= @_mxit.input %>" />
-      <input type="submit" name="submit" value="Proceed" />
+      <input type="submit" name="_mxit_rails_submit" value="Proceed" />
   </form>
 
 <% elsif @_mxit.proceed %>
-  <p><b>&gt; <%= mxit_link @_mxit.proceed, @_mxit.proceed_label.to_s.capitalize %></b></p>
+  <p><b>&gt; <%= mxit_link @_mxit.proceed, @_mxit.proceed_label.to_s.capitalize, {_mxit_rails_submit: 'Proceed'} %></b></p>
 <% end %>
 
 </body>

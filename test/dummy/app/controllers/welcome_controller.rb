@@ -11,11 +11,11 @@ class WelcomeController < ApplicationController
   validate :min_length, 10, 'Numbers must be at least 10 digits long'
   validate :max_length, 11, 'Numbers cannot be longer than 11 digits'
 
-  proceed :success
-
   render do
     @time = Time.now.strftime '%H:%M:%S on %A'
   end
+
+  proceed :success
 
   submit do
     if @phone_number == 'easter egg'
