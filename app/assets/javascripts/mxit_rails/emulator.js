@@ -69,6 +69,11 @@ Emulator = (function() {
       $('#phone').addClass('collapse');
       $('#fadeout').hide();
     },
+
+    updateIframe: function(iframe) {
+      // var doc = iframe.contentWindow.document;
+      // $('head', doc).append(MXIT_INCLUDED_CSS);
+    },
   }
 })();
 

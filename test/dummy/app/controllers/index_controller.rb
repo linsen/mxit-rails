@@ -3,8 +3,10 @@ class IndexController < ApplicationController
   include MxitRails::Page
 
   def index
-    title 'Templater'
-    done :index
   end
+
+  def success
+  end
+
 
 end

@@ -44,7 +44,7 @@
     <a id="expand" class="out link" onclick="Emulator.expand()"><span class="icon"><span class="image"></span></span></a>
     <a id="collapse" class="in link" onclick="Emulator.collapse()"><span class="icon"><span class="image"></span></span></a>
     <div id="screen">
-      <iframe id="center" class="content"></iframe>
+      <iframe id="center" class="content" onLoad="Emulator.updateIframe(this)"></iframe>
     </div>
   </div>
 

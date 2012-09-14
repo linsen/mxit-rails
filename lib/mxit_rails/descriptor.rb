@@ -17,11 +17,7 @@ module MxitRails
     attr_accessor :name
     attr_accessor :type
 
-    descr_accessor :title
     descr_accessor :proceed
-
-    descr_accessor :nav_link
-    descr_accessor :nav_target
 
     attr_accessor :input
     attr_accessor :input_label

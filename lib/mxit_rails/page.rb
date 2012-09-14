@@ -21,10 +21,6 @@ module MxitRails
       end
     end
 
-    def error! message, code = nil
-      raise MxitRails::Exception.new(message, code)
-    end
-
     def redirect! route
       exception = MxitRails::RedirectException.new('', :redirect)
       exception.route = route
@@ -38,7 +34,8 @@ module MxitRails
         # Call with/out a parameter, depending on whether one is specified
         valid = parameter ? MxitRails::Validations.send(method, input, parameter) : MxitRails::Validations.send(method, input)
         if !valid
-          error! validation[:message]
+          @_mxit_validated = false
+          @_mxit_validation_messages << validation[:message]
         end
       end
     end
@@ -70,6 +67,8 @@ module MxitRails
       get_mxit_info
 
       @_mxit = descriptor
+      @_mxit_validated = true
+      @_mxit_validation_messages = []
 
       clean_session
     end
@@ -86,37 +85,10 @@ module MxitRails
       end
     end
 
-    def render_error message
-      @_mxit_error_message = message
-      @_mxit = descriptor
-      render "mxit_rails/error"
-    end
-
     def handle_mxit_exception exception
       if exception.kind_of? MxitRails::RedirectException 
         redirect_to(exception.route) and return
-
-      elsif exception.kind_of? MxitRails::Exception
-        render_error exception.message
       end
-    end
-
-    def title title_string
-      descriptor.title = title_string
-    end
-
-    def nav_link type, target
-      descriptor.nav_link = type
-      descriptor.nav_target = target
-    end
-    def back target
-      nav_link :back, target
-    end
-    def cancel target
-      nav_link :cancel, target
-    end
-    def done target
-      nav_link :done, target
     end
 
     def input input_name, input_label
@@ -145,7 +117,8 @@ module MxitRails
           input = descriptor.input.to_sym
           validate! params[input]
         end
-        instance_eval &block
+        
+        instance_eval &block if @_mxit_validated
       end
     end
 
@@ -178,12 +151,14 @@ module MxitRails
           unless descriptor.input.nil?
             input = descriptor.input.to_sym
             validate! params[input]
-            session[:_mxit_rails_params][input] = params[input]
+            session[:_mxit_rails_params][input] = params[input] if @_mxit_validated
           end
 
-          params.delete :_mxit_rails_submit
-          @next_step = true
-          return
+          if @_mxit_validated
+            params.delete :_mxit_rails_submit
+            @next_step = true
+            return
+          end
         end
 
         # Render the form if appropriate

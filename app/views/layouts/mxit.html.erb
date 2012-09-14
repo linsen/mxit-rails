@@ -3,9 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-  <title><%= @_mxit.title %></title>
+  <title>Mxit App</title>
 
   <meta name="mxit" content="no_prefix,show_progress,clear_on_new,no_heading" />
+
+  <% if request.headers['x-mxit-login'].nil? %>
+    <!-- Include a CSS file, but only in a browser/emulator, not on mxit -->
+    <%= stylesheet_link_tag "mxit_rails/included" %>
+  <% end %>
 
   <style type="text/css">
     a:hover { <%= mxit_style :link_hover %> }
@@ -15,31 +20,33 @@
 
 <body style="<%= mxit_style :body %>">
 
-
-  <table title="mxit:table:full" style="width:100%" name="title_table">
+  <table title="mxit:table:full" style="width:100%" name="title_table" cellspacing="0" cellpadding="0">
     <colgroup span="1" width="100%"></colgroup>
     <tr>
       <td style="<%= mxit_style :title %>">
-        <b><%= @_mxit.title %></b>
+        <b><%= yield :title %></b>
       </td>
     </tr>
   </table>
 
-  <% if @_mxit.nav_link %>
-    <p style="<%= mxit_style :right %>"><%= mxit_link @_mxit.nav_target, @_mxit.nav_link.to_s.capitalize %></p>
+  <%= yield :navigation %>
+
+  <% if !@_mxit_validated %>
+    <%= @_mxit_validation_messages.first %>
+
+  <% else %>
+    <%= yield %>
   <% end %>
 
-  <%= yield %>
-
   <% if @_mxit.input %>
-    <p><b style="<%= mxit_style :link %>">&gt; <%= @_mxit.input_label %></b></p>
+    <%= mxit_proceed @_mxit.input_label %>
     <form method="POST" action="<%= @_mxit.url %>">
         <input type="text" name="<%= @_mxit.input %>" />
         <input type="submit" name="_mxit_rails_submit" value="Proceed" />
     </form>
 
   <% elsif @_mxit.proceed %>
-    <p><b style="<%= mxit_style :link %>">&gt; <%= mxit_link @_mxit.url, @_mxit.proceed.to_s.capitalize, {_mxit_rails_submit: 'Proceed'} %></b></p>
+    <%= mxit_proceed mxit_link(@_mxit.url, @_mxit.proceed.to_s.capitalize, {_mxit_rails_submit: 'Proceed'}) %>
   <% end %>
 
 </body>

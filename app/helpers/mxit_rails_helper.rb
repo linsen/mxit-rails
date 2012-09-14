@@ -24,4 +24,12 @@ module MxitRailsHelper
     content.join(' ').html_safe
   end
 
+  def mxit_nav_link target, label
+    "<p style=\"#{ mxit_style :right }\">#{ mxit_link target, label }</p>".html_safe
+  end
+
+  def mxit_proceed content
+    "<p><b style=\"#{ mxit_style :link }\">&gt; #{content}</b></p>".html_safe
+  end
+
 end
