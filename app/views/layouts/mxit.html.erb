@@ -10,6 +10,9 @@
   <% if request.headers['x-mxit-login'].nil? %>
     <!-- Include a CSS file, but only in a browser/emulator, not on mxit -->
     <%= stylesheet_link_tag "mxit_rails/included" %>
+    <style type="text/css">
+      a:focus { outline: none; <%= mxit_style :link_hover %> }
+    </style>
   <% end %>
 
   <style type="text/css">
