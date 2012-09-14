@@ -139,27 +139,57 @@ a.link {
 .in .icon .image, .out .icon .image {
   background-size: 22px;
 }
+.refresh .icon .image {
+  background-size: 24px;
+  top: -1px;
+  left: -1px;
+  position: relative;
+}
 
-#expand {
+#phone-links {
   position: absolute;
   display: block;
   right: 19px;
   top: 27px;
-}
-
-#collapse {
-  position: absolute;
   z-index: 10;
-  display: block;
+  width: 90px;
+  height: 40px;
+  text-align: right;
+}
+#phone.collapse #phone-links {
   right: 1px;
   top: 5px;
+}
+#collapse {
   display: none;
 }
 #phone.collapse #expand {
   display: none;
 }
 #phone.collapse #collapse {
-  display: block;
+  display: inline;
+}
+
+#phone-input {
+  width: 220px;
+  height: 30px;
+  padding: 5px 9px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  font-size: 20px;
+  line-height: 30px;
+  margin-top: 10px;
+}
+#phone.collapse #phone-input {
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+  z-index: 10;
+  width: auto;
+}
+#phone-input:disabled {
+  display: none;
 }
 
 #fadeout {

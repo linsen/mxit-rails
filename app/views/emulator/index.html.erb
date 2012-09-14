@@ -19,6 +19,7 @@
       .go > .icon .image  { background-image: url(<%= image_path("mxit_rails/go.png");  %>) }
       .in > .icon .image  { background-image: url(<%= image_path("mxit_rails/in.png");  %>) }
       .out > .icon .image { background-image: url(<%= image_path("mxit_rails/out.png"); %>) }
+      .refresh > .icon .image { background-image: url(<%= image_path("mxit_rails/refresh.png"); %>) }
     </style>
 </head>
 <body>
@@ -41,11 +42,15 @@
   </div>
 
   <div id="phone">
-    <a id="expand" class="out link" onclick="Emulator.expand()"><span class="icon"><span class="image"></span></span></a>
-    <a id="collapse" class="in link" onclick="Emulator.collapse()"><span class="icon"><span class="image"></span></span></a>
-    <div id="screen">
-      <iframe id="center" class="content" onLoad="Emulator.updateIframe(this)"></iframe>
+    <div id="phone-links">
+      <a id="refresh" class="refresh link" onclick="Emulator.refresh()"><span class="icon"><span class="image"></span></span></a>
+      <a id="expand" class="out link" onclick="Emulator.expand()"><span class="icon"><span class="image"></span></span></a>
+      <a id="collapse" class="in link" onclick="Emulator.collapse()"><span class="icon"><span class="image"></span></span></a>
     </div>
+    <div id="screen">
+      <iframe id="center" class="content" onLoad="Emulator.updateIframe()"></iframe>
+    </div>
+    <input id="phone-input" type="text" autocomplete="off" />
   </div>
 
   <div id="fadeout"></div>

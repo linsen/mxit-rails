@@ -60,6 +60,13 @@ Emulator = (function() {
       $('#not-registered').show();
     },
 
+    iframe: function() {
+      return $('#center')[0].contentWindow;
+    },
+    iframeElement: function(queryString) {
+      return $(queryString, Emulator.iframe().document);
+    },
+
     collapse: function() {
       $('#phone').removeClass('collapse');
       $('#fadeout').show();
@@ -70,9 +77,27 @@ Emulator = (function() {
       $('#fadeout').hide();
     },
 
-    updateIframe: function(iframe) {
-      // var doc = iframe.contentWindow.document;
-      // $('head', doc).append(MXIT_INCLUDED_CSS);
+    refresh: function() {
+      Emulator.iframe().location.reload();
+    },
+
+    updateIframe: function() {
+      if (Emulator.iframeElement('form').length > 0) {
+        $('#phone-input').attr('disabled', false).focus();
+      } else {
+        $('#phone-input').attr('disabled', 'disabled').blur();
+      }  
+    },
+
+    submit: function(e) {
+      if (e.charCode == 13) {
+        if (Emulator.iframeElement('form').length > 0) {
+          Emulator.iframeElement('input[type=text]').val($('#phone-input').val());
+          Emulator.iframeElement('input[type=submit]').click();
+
+          $('#phone-input').val('');
+        }
+      }
     },
   }
 })();
@@ -89,5 +114,7 @@ $(function() {
   } else {
     Emulator.clearCredentials();
   }
+
+  $('#phone-input').on('keypress', $.proxy(Emulator, 'submit'))
 
 });
