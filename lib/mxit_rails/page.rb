@@ -8,7 +8,7 @@ module MxitRails
 
     def set_descriptor name, parent_name=:default
       @descriptors ||= {}
-      @descriptors[name] ||= MxitRails::Descriptor.new controller_name, @descriptors[parent_name]
+      @descriptors[name] ||= MxitRails::Descriptor.new controller_name, action_name, @descriptors[parent_name]
       @descriptor_name = name
     end
     def descriptor
@@ -27,19 +27,6 @@ module MxitRails
       exception = MxitRails::RedirectException.new('', :redirect)
       exception.route = route
       raise exception
-    end
-
-    def validate! input
-      descriptor.validations.each do |validation|
-        method = validation[:type].to_s + '?' #All validations are defined with a trailing question mark
-        parameter = validation[:parameter]
-        # Call with/out a parameter, depending on whether one is specified
-        valid = parameter ? MxitRails::Validations.send(method, input, parameter) : MxitRails::Validations.send(method, input)
-        if !valid
-          @_mxit_validated = false
-          @_mxit_validation_messages << validation[:message]
-        end
-      end
     end
 
     def get_mxit_header_field key
@@ -101,11 +88,36 @@ module MxitRails
       descriptor.proceed = label
     end
 
-    def validate *arguments
-      type = arguments[0]
-      message = arguments[-1]
-      parameter = arguments[1..-2][0] # Will return nil if there isn't an argument
-      descriptor.add_validation type, message, parameter
+    def run_validation input, method, parameter
+      method = method.to_s + '?' #All validations are defined with a trailing question mark
+      # Call with/out a parameter, depending on whether one is specified
+      parameter ? MxitRails::Validations.send(method, input, parameter) : MxitRails::Validations.send(method, input)
+    end
+
+    def validate *arguments, &block
+      return unless params.include?(:_mxit_rails_submit)
+      return if descriptor.input.nil?
+
+      valid = true
+      input = descriptor.input.to_sym
+
+      if block.nil?
+        parameter = arguments[1..-2][0] # Will return nil if there isn't an argument
+
+        if !descriptor.form? || (current_step == step_name)
+          valid = run_validation params[input], arguments.first, parameter
+        end
+
+      else
+        valid = instance_exec params[input], &block
+        logger.info "Output: #{valid}"
+      end
+
+      if !valid
+        @_mxit_validated = false
+        @_mxit_validation_messages << arguments.last
+      end
+
     end
 
     def submit &block
@@ -114,12 +126,7 @@ module MxitRails
       if descriptor.form? && next_step?
         instance_eval &block
 
-      elsif params.include?(:_mxit_rails_submit)
-        unless descriptor.input.nil?
-          input = descriptor.input.to_sym
-          validate! params[input]
-        end
-        
+      elsif params.include?(:_mxit_rails_submit)        
         instance_eval &block if @_mxit_validated
       end
     end
@@ -149,14 +156,12 @@ module MxitRails
       # Process the form if it is the current step
       if current_step == step_name
         if params.include?(:_mxit_rails_submit)
-          # Validate the current input if present
-          unless descriptor.input.nil?
-            input = descriptor.input.to_sym
-            validate! params[input]
-            session[:_mxit_rails_params][input] = params[input] if @_mxit_validated
-          end
-
           if @_mxit_validated
+            unless descriptor.input.nil?
+              input = descriptor.input.to_sym
+              session[:_mxit_rails_params][input] = params[input]
+            end
+
             params.delete :_mxit_rails_submit
             @next_step = true
             return

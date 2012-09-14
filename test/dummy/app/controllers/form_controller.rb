@@ -11,6 +11,9 @@ class FormController < ApplicationController
       step :name do
         input :name, 'What is your name?'
         validate :not_blank, 'You must enter a name'
+        validate 'That is not a cool enough name' do |input|
+          input != 'Steve'
+        end
       end
 
       step :surname do

@@ -15,6 +15,7 @@ module MxitRails
     attr_accessor :parent_descriptor
 
     attr_accessor :name
+    attr_accessor :action
     attr_accessor :type
 
     descr_accessor :proceed
@@ -22,21 +23,16 @@ module MxitRails
     attr_accessor :input
     attr_accessor :input_label
 
-    attr_accessor :validations
-
-    def initialize name, parent=nil
+    def initialize name, action, parent=nil
       @parent_descriptor = parent
-      self.name = name.to_sym
+      @name = name.to_sym
+      @action = action.to_sym
       @validations = []
       @steps = []
     end
 
-    def add_validation type, message, parameter
-      @validations << {type: type, message: message, parameter: parameter}
-    end
-
     def url
-      MxitRails::Router.url name
+      MxitRails::Router.url "#{name}/#{action}"
     end
 
     def view

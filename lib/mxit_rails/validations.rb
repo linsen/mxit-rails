@@ -9,6 +9,10 @@ module MxitRails
       return !input.blank? && input.match(/^[0-9]+$/)
     end
 
+    def self.length? input, len
+      return !input.blank? && (input.length == len)
+    end
+
     def self.min_length? input, max
       return !input.blank? && (input.length >= max)
     end
