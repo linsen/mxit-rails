@@ -2,7 +2,9 @@ module MxitRails
   module Page
     extend ActiveSupport::Concern
 
-    attr_accessor :mxit_params
+    def mxit_params
+      @_mxit_params
+    end
 
     def set_descriptor name, parent_name=:default
       @descriptors ||= {}
@@ -45,15 +47,15 @@ module MxitRails
     end
 
     def get_mxit_info
-      mxit_params = {}
-      mxit_params[:m_id] = get_mxit_header_field 'X-Mxit-UserId-R'
-      mxit_params[:username] = get_mxit_header_field 'x-mxit-login'
+      @_mxit_params = {}
+      @_mxit_params[:m_id] = get_mxit_header_field 'X-Mxit-UserId-R'
+      @_mxit_params[:username] = get_mxit_header_field 'x-mxit-login'
 
       device_info = get_mxit_header_field('X-Mxit-Device-Info')
       unless device_info.blank?
         device_info.split(',')
-        mxit_params[:distribution_code] = device_info.first
-        mxit_params[:mobile_number] = device_info[1] if device_info.length == 2
+        @_mxit_params[:distribution_code] = device_info.first
+        @_mxit_params[:mobile_number] = device_info[1] if device_info.length == 2
       end
     end
 
