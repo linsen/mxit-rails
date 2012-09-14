@@ -39,7 +39,7 @@
     </form>
 
   <% elsif @_mxit.proceed %>
-    <p><b style="<%= mxit_style :link %>">&gt; <%= mxit_link @_mxit.proceed, @_mxit.proceed_label.to_s.capitalize, {_mxit_rails_submit: 'Proceed'} %></b></p>
+    <p><b style="<%= mxit_style :link %>">&gt; <%= mxit_link @_mxit.url, @_mxit.proceed.to_s.capitalize, {_mxit_rails_submit: 'Proceed'} %></b></p>
   <% end %>
 
 </body>

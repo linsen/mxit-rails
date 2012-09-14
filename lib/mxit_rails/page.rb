@@ -3,7 +3,15 @@ module MxitRails
     extend ActiveSupport::Concern
 
     attr_accessor :mxit_params
-    attr_reader :descriptor
+
+    def set_descriptor name, parent_name=:default
+      @descriptors ||= {}
+      @descriptors[name] ||= MxitRails::Descriptor.new controller_name, @descriptors[parent_name]
+      @descriptor_name = name
+    end
+    def descriptor
+      @descriptors[@descriptor_name]
+    end
 
     included do
       if self.ancestors.include? ApplicationController
@@ -35,25 +43,6 @@ module MxitRails
       end
     end
 
-    def submit &block
-      if params.include?(:_mxit_rails_submit)
-        unless descriptor.input.nil?
-          input = descriptor.input.to_sym
-          validate! params[input]
-        end
-        instance_eval &block unless block.nil?
-      end
-    end
-
-    def clear_session whitelisted=[]
-      whitelisted.map! {|item| item.to_sym}
-      session.each do |key, value|
-        if (key.to_s.match /_mxit_rails_/) && !whitelisted.include?(key.to_sym)
-          session[key] = nil
-        end
-      end
-    end
-
     def get_mxit_header_field key
       request.headers[key] || cookies[key.downcase]
     end
@@ -76,12 +65,25 @@ module MxitRails
     #========================
 
     def setup
-      @descriptor = MxitRails::Descriptor.new controller_name
+      set_descriptor :default 
 
       get_mxit_info
-      clear_session
 
       @_mxit = descriptor
+
+      clean_session
+    end
+
+    def clean_session
+      # Drop all mxit items from session if the page doesn't match the current one
+      if session[:_mxit_rails_page] != "#{controller_name}##{action_name}"
+        session.each do |key, value|
+          if key.to_s.match(/_mxit_rails_/)
+            session[key] = nil
+          end
+        end
+        session[:_mxit_rails_page] = "#{controller_name}##{action_name}"
+      end
     end
 
     def render_error message
@@ -121,9 +123,8 @@ module MxitRails
       descriptor.input = input_name
       descriptor.input_label = input_label
     end
-    def proceed target, label=nil
-      descriptor.proceed = target
-      descriptor.proceed_label = label
+    def proceed label
+      descriptor.proceed = label
     end
 
     def validate *arguments
@@ -131,6 +132,79 @@ module MxitRails
       message = arguments[-1]
       parameter = arguments[1..-2][0] # Will return nil if there isn't an argument
       descriptor.add_validation type, message, parameter
+    end
+
+    def submit &block
+      set_descriptor :default
+
+      if descriptor.form? && next_step?
+        instance_eval &block
+
+      elsif params.include?(:_mxit_rails_submit)
+        unless descriptor.input.nil?
+          input = descriptor.input.to_sym
+          validate! params[input]
+        end
+        instance_eval &block
+      end
+    end
+
+
+    def current_step
+      return nil if session[:_mxit_rails_step].nil?
+      session[:_mxit_rails_step].to_sym
+    end
+    def current_step= new_step
+      session[:_mxit_rails_step] = new_step.to_sym
+    end
+    def next_step?
+      @next_step
+    end
+
+    def step step_name, &block
+      # Is the current step blank
+      if next_step?
+        self.current_step = step_name
+        @next_step = false
+      end
+
+      set_descriptor step_name
+      instance_eval &block
+
+      # Process the form if it is the current step
+      if current_step == step_name
+        if params.include?(:_mxit_rails_submit)
+          # Validate the current input if present
+          unless descriptor.input.nil?
+            input = descriptor.input.to_sym
+            validate! params[input]
+            session[:_mxit_rails_params][input] = params[input]
+          end
+
+          params.delete :_mxit_rails_submit
+          @next_step = true
+          return
+        end
+
+        # Render the form if appropriate
+        @_mxit = descriptor
+        render "#{controller_name}/#{action_name}/#{current_step}"
+      end
+    end
+
+    def form &block
+      descriptor.type = :form
+      session[:_mxit_rails_params] ||= {}
+
+      # Ensure previous inputs are in the params hash
+      session[:_mxit_rails_params].each do |key, value|
+        params[key.to_sym] = value
+      end
+
+      # Proceed to the (first) step if no step is in the session
+      @next_step = true if session[:_mxit_rails_step].nil?
+
+      instance_eval &block
     end
   end
 end

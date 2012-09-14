@@ -15,11 +15,10 @@ module MxitRails
     attr_accessor :parent_descriptor
 
     attr_accessor :name
-    attr_accessor :step
+    attr_accessor :type
 
     descr_accessor :title
     descr_accessor :proceed
-    descr_accessor :proceed_label
 
     descr_accessor :nav_link
     descr_accessor :nav_target
@@ -33,6 +32,7 @@ module MxitRails
       @parent_descriptor = parent
       self.name = name.to_sym
       @validations = []
+      @steps = []
     end
 
     def add_validation type, message, parameter
@@ -51,5 +51,8 @@ module MxitRails
       view
     end
 
+    def form?
+      type == :form
+    end
   end
 end

@@ -8,7 +8,6 @@ require "mxit_rails/controller_extensions"
 require "mxit_rails/validations"
 require "mxit_rails/router"
 require "mxit_rails/page"
-require "mxit_rails/form"
 
 module MxitRails
 end

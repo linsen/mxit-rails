@@ -1,43 +1,49 @@
 class FormController < ApplicationController
 
-  include MxitRails::Form
+  include MxitRails::Page
 
-  title 'Form'
-  back :index
+  def index
+    logger.info session
+    form do
+      title 'Form'
+      back :index
 
-  step :name do
-    title 'Step 1 of 3'
-    input :name, 'What is your name?'
-    validate :not_blank, 'You must enter a name'
-  end
+      step :start do
+        proceed 'Start the form'
+      end
 
-  step :surname do
-    title 'Step 2 of 3'
-    input :surname, 'What is your surname?'
-  end
+      step :name do
+        title 'Step 1 of 3'
+        input :name, 'What is your name?'
+        validate :not_blank, 'You must enter a name'
+      end
 
-  step :age do
-    title 'Step 3 of 3'
-    input :age, 'How old are you?'
+      step :surname do
+        title 'Step 2 of 3'
+        input :surname, 'What is your surname?'
+      end
 
-    validate :numeric, 'Please enter numeric digits only'
-    validate :max_length, 2, 'Your age cannot be more than 99'
-  end
+      step :age do
+        title 'Step 3 of 3'
+        input :age, 'How old are you?'
 
-  step :done do
-    proceed :form, 'Submit my information'
+        validate :numeric, 'Please enter numeric digits only'
+        validate :max_length, 2, 'Your age cannot be more than 99'
+      end
 
-    render do
-      @name = params[:name]
-      @surname = params[:surname]
-      @age = params[:age]
+      step :done do
+        proceed 'Submit my information'
+
+        @name = params[:name]
+        @surname = params[:surname]
+        @age = params[:age]
+      end
+
+      submit do
+        logger.info "Form Completed!\nname: #{params[:name]};  surname: #{params[:surname]};  age: #{params[:age]}\n******\n\n"
+        redirect! '/mxit/index'
+      end
     end
   end
 
-  proceed :index
-
-  submit do
-    logger.info "Form Completed!\nname: #{params[:name]};  surname: #{params[:surname]};  age: #{params[:age]}\n******\n\n"
-  end
-  
 end
