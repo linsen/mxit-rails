@@ -15,7 +15,7 @@ Installation
 ------------
 To use the gem, just include the gem your rails projects' gemfile:
 
-    gem 'sass-rails'
+    gem 'mxit-rails', '~> 0.1.2'
 
 The newest version is 0.1.2 - it is not recommended to use any earlier versions.
 
