@@ -9,7 +9,7 @@ Later versions will also include wrappers for important Mxit APIs.
 
 Sample App
 ----------
-A basi to-do app has been set up as an example of the gem in use.  It can be seen at [mxit-to-do](https://github.com/linsen/mxit-to-do).
+A basic to-do app has been set up as an example of the gem in use.  It can be seen at [mxit-to-do](https://github.com/linsen/mxit-to-do).
 
 Installation
 ------------
