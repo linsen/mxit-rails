@@ -10,7 +10,8 @@
     <link rel="icon" type="image/x-icon" href="<%= image_path("mxit_rails/favicon.ico");  %>" />
 
     <script type="text/javascript">
-      MXIT_ROOT = '<%= Rails.application.config.mxit_root %>';
+      MXIT_ROOT = '<%= @root_path %>';
+      MXIT_PATH = '<%= @path %>';
     </script>
 
     <!-- The asset image-path helper isn't working in scss files, so moving those to here. sigh. -->

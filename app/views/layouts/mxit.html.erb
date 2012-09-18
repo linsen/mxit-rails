@@ -43,13 +43,13 @@
 
   <% if @_mxit.input %>
     <%= mxit_proceed @_mxit.input_label %>
-    <form method="POST" action="<%= @_mxit.url %>">
+    <form method="POST" action="<%= request.path %>">
         <input type="text" name="<%= @_mxit.input %>" />
         <input type="submit" name="_mxit_rails_submit" value="Proceed" />
     </form>
 
   <% elsif @_mxit.proceed %>
-    <%= mxit_proceed mxit_link(@_mxit.url, @_mxit.proceed.to_s.capitalize, {_mxit_rails_submit: 'Proceed'}) %>
+    <%= mxit_proceed mxit_link(request.path, @_mxit.proceed.to_s.capitalize, {_mxit_rails_submit: 'Proceed'}) %>
   <% end %>
 
 </body>

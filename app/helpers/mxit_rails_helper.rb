@@ -1,9 +1,5 @@
 module MxitRailsHelper
 
-  def mxit_path route
-    MxitRails::Router.url route
-  end
-
   def mxit_link route, label, variables=nil
     unless variables.nil?
       var_strings = []

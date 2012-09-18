@@ -1,7 +1,16 @@
 //= require mxit_rails/jquery-1.8.0.min
 //= require mxit_rails/jquery.cookie
+//= require mxit_rails/jquery.history
 
 Emulator = (function() {
+  // history.js setup
+  var History = window.History; // Note: We are using a capital H instead of a lower h
+  History.Adapter.bind(window,'statechange',function(){ // Note: We are using statechange instead of popstate
+      var State = History.getState(); // Note: We are using History.getState() instead of event.state
+      if (State.data.url)
+        Emulator.setUrl(State.data.url);
+  });
+
   var keys = {
     BACKSPACE: 8,
     ENTER: 13,
@@ -30,8 +39,10 @@ Emulator = (function() {
       $.cookie('x-mxit-userid-r', 'm987654321', {path: '/'});
       $.cookie('x-mxit-device-info', 'DISTRO_CODE,' + msisdn, {path: '/'});
 
-      // Reset the iframe
-      $('#center').attr('src', '/' + MXIT_ROOT);
+      if (MXIT_PATH && (MXIT_PATH != ''))
+        Emulator.setUrl(MXIT_PATH);
+      else
+        Emulator.setUrl(MXIT_ROOT);
     },
 
     clearCookie: function() {
@@ -40,8 +51,27 @@ Emulator = (function() {
       $.cookie('x-mxit-userid-r', null, {path: '/'});
       $.cookie('x-mxit-device-info', null, {path: '/'});
 
-      // Reset the iframe
-      $('#center').attr('src', '/' + MXIT_ROOT);
+      if (MXIT_PATH && (MXIT_PATH != ''))
+        Emulator.setUrl(MXIT_PATH);
+      else
+        Emulator.setUrl(MXIT_ROOT);
+    },
+
+    getUrl: function() {
+      if (typeof($('#center').attr('src')) != 'undefined') {
+        return Emulator.iframe().location.pathname;
+      }
+      return null;
+    },
+
+    setUrl: function(path) {
+      if (Emulator.getUrl() == path)
+        return;
+
+      var url = path;
+      if (url[0] != '/')
+        url = '/' + url;
+      $('#center').attr('src', url);
     },
 
     enterCredentials: function() {
@@ -103,6 +133,12 @@ Emulator = (function() {
     },
 
     updateIframe: function() {
+      var newPath = Emulator.getUrl();
+      if (newPath) {
+        History.pushState({url: newPath}, '', '/emulator' + newPath);
+      }
+
+      Emulator.iframeElement('body').addClass('emulator');
       Emulator.iframeElement('body').on('keydown', $.proxy(Emulator, 'key'));
 
       if (this.hasInput()) {
@@ -168,6 +204,8 @@ Emulator = (function() {
     },
   }
 })();
+
+
 
 $(function() {
 

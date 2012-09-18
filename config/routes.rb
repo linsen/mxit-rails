@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
 
-  match '/emulator', :controller => 'emulator', :action => 'index'
+  match '/emulator(/*path)', :controller => 'emulator', :action => 'index'
 
 end

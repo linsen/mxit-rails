@@ -64,7 +64,7 @@ module MxitRails
 
     def clean_session
       # Drop all mxit items from session if the page doesn't match the current one
-      if session[:_mxit_rails_page] != "#{controller_name}##{action_name}"
+      if (session[:_mxit_rails_page] != "#{controller_name}##{action_name}") || (params[:_mxit_reset])
         session.each do |key, value|
           if key.to_s.match(/_mxit_rails_/)
             session[key] = nil

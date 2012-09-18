@@ -35,14 +35,6 @@ module MxitRails
       MxitRails::Router.url "#{name}/#{action}"
     end
 
-    def view
-      view = MxitRails::Router.url name
-      unless step.nil?
-        view += "/#{step}"
-      end
-      view
-    end
-
     def form?
       type == :form
     end
