@@ -33,7 +33,7 @@ This creates a few helper methods that can be used within that controller
   Note that the block must not use a `return` statement
 - `submit &block` - A code block that will only be executed if the input was submitted and passed all validations.
 
-=== Validations
+### Validations
 Currently the following validations are available:
 - `:not_blank`
 - `:numeric`
