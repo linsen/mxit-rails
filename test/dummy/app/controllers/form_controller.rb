@@ -6,6 +6,7 @@ class FormController < ApplicationController
     form do
       step :start do
         proceed 'Start the form'
+        mxit_form_session[:dummy] = 'TEST'
       end
 
       step :name do
@@ -17,6 +18,11 @@ class FormController < ApplicationController
       end
 
       step :surname do
+        if params[:name] == 'Linsen'
+          skip_to :age
+          return
+        end
+
         input :surname, 'What is your surname?'
 
         @name = params[:name]
@@ -29,12 +35,19 @@ class FormController < ApplicationController
         validate :max_length, 2, 'Your age cannot be more than 99'
       end
 
+      step :gender do
+        # Any strings can be used as the key
+        select :gender, 'What is your gender?', {'male' => 'Male', 'female' => 'Female'}
+      end
+
       step :done do
         proceed 'Submit my information'
 
         @name = params[:name]
         @surname = params[:surname]
         @age = params[:age]
+        @gender = params[:gender]
+        @dummy = params[:dummy]
       end
 
       submit do

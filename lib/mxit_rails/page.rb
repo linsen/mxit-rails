@@ -6,6 +6,11 @@ module MxitRails
       @_mxit_params
     end
 
+    def mxit_form_session
+      session[:_mxit_rails_params]
+    end
+
+
     def set_descriptor name, parent_name=:default
       @descriptors ||= {}
       @descriptors[name] ||= MxitRails::Descriptor.new controller_name, action_name, @descriptors[parent_name]
@@ -89,6 +94,11 @@ module MxitRails
       descriptor.input = input_name
       descriptor.input_label = input_label
     end
+    def select select_name, select_label, select_options
+      descriptor.select = select_name
+      descriptor.select_label = select_label
+      descriptor.select_options = select_options
+    end
     def proceed label
       descriptor.proceed = label
     end
@@ -114,8 +124,7 @@ module MxitRails
         end
 
       else
-        valid = instance_exec params[input], &block
-        logger.info "Output: #{valid}"
+        valid = yield(params[input])
       end
 
       if !valid
@@ -129,10 +138,12 @@ module MxitRails
       set_descriptor :default
 
       if descriptor.form? && next_step?
-        instance_eval &block
+        yield
 
-      elsif params.include?(:_mxit_rails_submit)        
-        instance_eval &block if @_mxit_validated
+      elsif params.include?(:_mxit_rails_submit)
+        if @_mxit_validated
+          yield
+        end
       end
     end
 
@@ -155,16 +166,20 @@ module MxitRails
         @next_step = false
       end
 
-      set_descriptor step_name
-      instance_eval &block
-
       # Process the form if it is the current step
       if current_step == step_name
+        set_descriptor step_name
+        yield
+
         if params.include?(:_mxit_rails_submit)
           if @_mxit_validated
-            unless descriptor.input.nil?
+            if descriptor.input
               input = descriptor.input.to_sym
-              session[:_mxit_rails_params][input] = params[input]
+              mxit_form_session[input] = params[input]
+
+            elsif descriptor.select
+              select = descriptor.select.to_sym
+              mxit_form_session[select] = params[select]
             end
 
             params.delete :_mxit_rails_submit
@@ -179,19 +194,26 @@ module MxitRails
       end
     end
 
+    def skip_to step_name
+      self.current_step = step_name
+      # A redirect might not be absolutely required, but it makes things much simpler
+      redirect_to request.path
+    end
+
     def form &block
       descriptor.type = :form
       session[:_mxit_rails_params] ||= {}
 
       # Ensure previous inputs are in the params hash
-      session[:_mxit_rails_params].each do |key, value|
+      mxit_form_session.each do |key, value|
         params[key.to_sym] = value
       end
 
       # Proceed to the (first) step if no step is in the session
-      @next_step = true if session[:_mxit_rails_step].nil?
+      @next_step = true if current_step.nil?
 
-      instance_eval &block
+      yield
+
     end
   end
 end

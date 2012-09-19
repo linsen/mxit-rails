@@ -37,6 +37,12 @@
         <input type="submit" name="_mxit_rails_submit" value="Proceed" />
     </form>
 
+  <% elsif @_mxit.select %>
+    <%= mxit_proceed @_mxit.select_label %>
+    <% @_mxit.select_options.each do |key, value| %>
+    - <%= mxit_link(request.path, value, {_mxit_rails_submit: 'Proceed', @_mxit.select => key}) %><br />
+    <% end %>
+
   <% elsif @_mxit.proceed %>
     <%= mxit_proceed mxit_link(request.path, @_mxit.proceed.to_s.capitalize, {_mxit_rails_submit: 'Proceed'}) %>
   <% end %>

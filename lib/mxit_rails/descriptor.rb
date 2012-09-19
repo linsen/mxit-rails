@@ -23,6 +23,10 @@ module MxitRails
     attr_accessor :input
     attr_accessor :input_label
 
+    attr_accessor :select
+    attr_accessor :select_label
+    attr_accessor :select_options
+
     attr_accessor :has_table
 
     def initialize name, action, parent=nil
