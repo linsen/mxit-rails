@@ -18,6 +18,8 @@ class FormController < ApplicationController
 
       step :surname do
         input :surname, 'What is your surname?'
+
+        @name = params[:name]
       end
 
       step :age do
@@ -37,7 +39,7 @@ class FormController < ApplicationController
 
       submit do
         logger.info "Form Completed!\nname: #{params[:name]};  surname: #{params[:surname]};  age: #{params[:age]}\n******\n\n"
-        redirect! '/mxit/index/success'
+        redirect_to '/index/success' and return
       end
     end
   end

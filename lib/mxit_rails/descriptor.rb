@@ -23,6 +23,8 @@ module MxitRails
     attr_accessor :input
     attr_accessor :input_label
 
+    attr_accessor :has_table
+
     def initialize name, action, parent=nil
       @parent_descriptor = parent
       @name = name.to_sym

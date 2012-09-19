@@ -51,9 +51,6 @@ module Dummy
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
-
-    # Mxit app's root path - only used for the emulator
-    config.mxit_root = 'mxit'
   end
 end
 

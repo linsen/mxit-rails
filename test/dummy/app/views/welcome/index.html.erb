@@ -1,6 +1,13 @@
-<%= content_for :title do %>Step 1 of 1<% end %>
-<%= content_for :navigation do %><%= mxit_nav_link '/mxit/index', 'Back' %><% end %>
+<%= mxit_table_row :title %>
+<b>Step 1 of 1</b>
 
-<p>You're visiting the templater-in-progress.  It's now <%= @time %>.</p>
+<%= mxit_table_row %>
+<%= mxit_nav_link '/', 'Back' %>
 
-<p>Please enter your cellphone number to proceed</p>
+<% if mxit_validation_message %>
+  <%= mxit_validation_message %>
+<% else %>
+  <p>You're visiting the templater-in-progress.  It's now <%= @time %>.</p>
+  <p>Please enter your cellphone number to proceed</p>
+<% end %>
+

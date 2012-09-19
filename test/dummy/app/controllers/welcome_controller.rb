@@ -18,10 +18,10 @@ class WelcomeController < ApplicationController
 
     submit do
       if params[:phone_number] == '1234567890'
-        redirect! :easter_egg
+        redirect_to '/welcome/easter_egg' and return
       end
       logger.info "This won't execute if an error occurred or if error! or redirect! was called"
-      redirect! '/mxit/index/success'
+      redirect_to '/index/success' and return
     end
   end
 

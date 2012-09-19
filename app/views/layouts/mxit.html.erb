@@ -23,22 +23,11 @@
 
 <body style="<%= mxit_style :body %>">
 
-  <table title="mxit:table:full" style="width:100%" name="title_table" cellspacing="0" cellpadding="0">
-    <colgroup span="1" width="100%"></colgroup>
-    <tr>
-      <td style="<%= mxit_style :title %>">
-        <b><%= yield :title %></b>
-      </td>
-    </tr>
-  </table>
+  <%= yield %>
 
-  <%= yield :navigation %>
-
-  <% if !@_mxit_validated %>
-    <%= @_mxit_validation_messages.first %>
-
-  <% else %>
-    <%= yield %>
+  <% if @_mxit.has_table %>
+    <!-- Close the table if there is one -->
+    </table>
   <% end %>
 
   <% if @_mxit.input %>

@@ -1,5 +1,8 @@
-<%= content_for :title do %>Confirm<% end %>
-<%= content_for :navigation do %><%= mxit_nav_link '/mxit/index', 'Back' %><% end %>
+<%= mxit_table_row :title %>
+<b>Confirm</b>
+
+<%= mxit_table_row %>
+<%= mxit_nav_link '/', 'Back' %>
 
 <p>That's it.  Please just confirm your information below:</p>
 <p>First name: <b><%= @name %></b></p>
