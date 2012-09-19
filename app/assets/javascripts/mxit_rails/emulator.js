@@ -42,7 +42,7 @@ Emulator = (function() {
       if (MXIT_PATH && (MXIT_PATH != ''))
         Emulator.setUrl(MXIT_PATH);
       else
-        Emulator.setUrl(MXIT_ROOT);
+        Emulator.home();
     },
 
     clearCookie: function() {
@@ -54,7 +54,11 @@ Emulator = (function() {
       if (MXIT_PATH && (MXIT_PATH != ''))
         Emulator.setUrl(MXIT_PATH);
       else
-        Emulator.setUrl(MXIT_ROOT);
+        Emulator.home();
+    },
+
+    home: function() {
+      Emulator.setUrl(MXIT_ROOT);
     },
 
     getUrl: function() {
@@ -119,13 +123,27 @@ Emulator = (function() {
     },
 
     collapse: function() {
-      $('#phone').removeClass('collapse');
-      $('#fadeout').show();
+      $('body').removeClass('collapse');
     },
 
     expand: function() {
-      $('#phone').addClass('collapse');
-      $('#fadeout').hide();
+      $('body').addClass('collapse');
+    },
+
+    expandCollapse: function(val) {
+      if (val) {
+        if (val == 'expand')
+          localStorage.setItem('expanded', true);
+        else
+          localStorage.removeItem('expanded');
+      }
+
+      var expanded = localStorage.getItem('expanded');
+      if (expanded) {
+        Emulator.expand();
+      } else {
+        Emulator.collapse();
+      }
     },
 
     refresh: function() {
@@ -149,6 +167,13 @@ Emulator = (function() {
         this.activeLink = 0;
       }
       this.focusLink();
+
+      // Look for Rails default stacktrace and expand if it's there.  Otherwise use the localstorage expanded setting
+      if ((Emulator.iframeElement('#env_dump').length > 0) && (Emulator.iframeElement('#session_dump').length > 0)) {
+        Emulator.expand();
+      } else {
+        Emulator.expandCollapse();
+      }
     },
 
     key: function(e) {
@@ -219,6 +244,8 @@ $(function() {
   } else {
     Emulator.clearCredentials();
   }
+
+  Emulator.expandCollapse();
 
   $('body').on('keydown', $.proxy(Emulator, 'key'));
   $('#phone-input').on('keypress', $.proxy(Emulator, 'submit'))

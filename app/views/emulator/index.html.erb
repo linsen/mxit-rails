@@ -21,6 +21,7 @@
       .in > .icon .image  { background-image: url(<%= image_path("mxit_rails/in.png");  %>) }
       .out > .icon .image { background-image: url(<%= image_path("mxit_rails/out.png"); %>) }
       .refresh > .icon .image { background-image: url(<%= image_path("mxit_rails/refresh.png"); %>) }
+      .home > .icon .image { background-image: url(<%= image_path("mxit_rails/home.png"); %>) }
     </style>
 </head>
 <body>
@@ -34,6 +35,12 @@
       <a id="link" class="go link" onclick="Emulator.enterCredentials()">Set Credentials <span class="icon"><span class="image"></span></span></a>
     </div>
 
+    <div id="phone-links">
+      <a id="home" class="home link" onclick="Emulator.home()"><span class="icon"><span class="image"></span></span></a>
+      <a id="refresh" class="refresh link" onclick="Emulator.refresh()"><span class="icon"><span class="image"></span></span></a>
+      <a id="expand" class="out link" onclick="Emulator.expandCollapse('expand')"><span class="icon"><span class="image"></span></span></a>
+      <a id="collapse" class="in link" onclick="Emulator.expandCollapse('collapse')"><span class="icon"><span class="image"></span></span></a>
+    </div>
     <div id="inputs">
       <input type="text" placeholder="Mxit ID" id="mxit-id-input" />
       <input type="text" placeholder="MSISDN" id="msisdn-input" />
@@ -43,11 +50,6 @@
   </div>
 
   <div id="phone">
-    <div id="phone-links">
-      <a id="refresh" class="refresh link" onclick="Emulator.refresh()"><span class="icon"><span class="image"></span></span></a>
-      <a id="expand" class="out link" onclick="Emulator.expand()"><span class="icon"><span class="image"></span></span></a>
-      <a id="collapse" class="in link" onclick="Emulator.collapse()"><span class="icon"><span class="image"></span></span></a>
-    </div>
     <div id="screen">
       <iframe id="center" class="content" onLoad="Emulator.updateIframe()"></iframe>
     </div>

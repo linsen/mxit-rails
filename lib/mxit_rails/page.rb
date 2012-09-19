@@ -30,7 +30,12 @@ module MxitRails
     end
 
     def get_mxit_header_field key
-      request.headers[key] || cookies[key.downcase]
+      output = request.headers[key]
+      # Only allow cookie-based headers in development
+      if Rails.env.development?
+        output ||= cookies[key.downcase]
+      end
+      output
     end
 
     def get_mxit_info
