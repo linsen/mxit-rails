@@ -249,7 +249,6 @@ $(function() {
 
   Emulator.expandCollapse();
 
-  Emulator.enterCredentials();
 
   $('body').on('keydown', $.proxy(Emulator, 'key'));
   $('#phone-input').on('keypress', $.proxy(Emulator, 'submit'))
