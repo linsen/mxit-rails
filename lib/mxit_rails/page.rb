@@ -45,14 +45,17 @@ module MxitRails
 
     def get_mxit_info
       @_mxit_params = {}
-      @_mxit_params[:m_id] = get_mxit_header_field 'X-Mxit-UserId-R'
-      @_mxit_params[:username] = get_mxit_header_field 'x-mxit-login'
+      @_mxit_params[:mxit_id] = get_mxit_header_field 'X-Mxit-UserId-R'
+      @_mxit_params[:mxit_login] = get_mxit_header_field('X-Mxit-Login') || get_mxit_header_field('X-Mxit-ID-R')
+      @_mxit_params[:display_name] = get_mxit_header_field 'X-Mxit-Nick'
 
+      @_mxit_params[:distribution_code] = ''
+      @_mxit_params[:mobile_number] = ''
       device_info = get_mxit_header_field('X-Mxit-Device-Info')
       unless device_info.blank?
-        device_info.split(',')
-        @_mxit_params[:distribution_code] = device_info.first
-        @_mxit_params[:mobile_number] = device_info[1] if device_info.length == 2
+        tmp = device_info.split(',')
+        @_mxit_params[:distribution_code] = tmp.first
+        @_mxit_params[:mobile_number] = tmp[1] if tmp.length == 2
       end
     end
 

@@ -100,3 +100,16 @@ navigating to their corresponding URL.
 To set the root URL of the emulator, add the following line to `config/application.rb`:
 
     config.mxit_root = 'mxit'
+
+
+Mxit Headers
+------------
+The gem automatically parses (some) Mxit headers and makes them available in the `mxit_params` hash.  When using the emulator these values are spoofed with cookies, but in a way transparent to the app itself.  Currently the following are available:
+
+- `:mxit_id` - The user's Mxit ID (m-ID). From the `X-Mxit-UserId-R` header
+- `:mxit_login` - The user's Mxit Login name. From the `X-Mxit-Login` or `X-Mxit-ID-R` header
+- `:display_name` - The user's current nickname. From the `X-Mxit-Nick` header
+- `:distribution_code` - The distribution code corresponding to the specific installaction of the Mxit app on the user's phone. 
+  The first part of the `X-Mxit-Device-Info` header.
+- `:mobile_number` - The user's mobile number as in their profile. The second part of the `X-Mxit-Device-Info` header.
+

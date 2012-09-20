@@ -29,7 +29,7 @@
   <div id="controls">
     <div id="default">
       <span id="not-registered">No credentials</span>
-      <span id="registered">Mxit ID: <span id="mxit-id"></span></span>
+      <span id="registered">Mxit Login: <span id="mxit-login"></span></span>
 
       <a id="unlink" class="go link" onclick="Emulator.clearCredentials()">Clear Credentials <span class="icon"><span class="image"></span></span></a>
       <a id="link" class="go link" onclick="Emulator.enterCredentials()">Set Credentials <span class="icon"><span class="image"></span></span></a>
@@ -41,17 +41,36 @@
       <a id="expand" class="out link" onclick="Emulator.expandCollapse('expand')"><span class="icon"><span class="image"></span></span></a>
       <a id="collapse" class="in link" onclick="Emulator.expandCollapse('collapse')"><span class="icon"><span class="image"></span></span></a>
     </div>
-    <div id="inputs">
-      <input type="text" placeholder="Mxit ID" id="mxit-id-input" />
-      <input type="text" placeholder="MSISDN" id="msisdn-input" />
-
-      <a id="link" class="go link" onclick="Emulator.saveCredentials()">Save <span class="icon"><span class="image"></span></span></a>
-    </div>
   </div>
 
   <div id="phone">
     <div id="screen">
       <iframe id="center" class="content" onLoad="Emulator.updateIframe()"></iframe>
+
+      <div id="inputs">
+        <div>
+          <label for="mxit-id-input">Mxit ID</label>
+          <input type="text" placeholder="Mxit ID" id="mxit-id-input" value="m987654321" />
+        </div>
+        <div>
+          <label for="mxit-login-input">Mxit Login</label>
+          <input type="text" placeholder="Mxit Login" id="mxit-login-input"/>
+        </div>
+        <div>
+          <label for="mxit-nick-input">Display Name (Nick)</label>
+          <input type="text" placeholder="Nickname" id="mxit-nick-input"/>
+        </div>
+        <div>
+          <label for="mxit-distribution-code-input">Distribution Code</label>
+          <input type="text" placeholder="Distribution Code" id="mxit-distribution-code-input" value="DISTRO_CODE"/>
+        </div>
+        <div>
+          <label for="mxit-msisdn-input">MSISDN (Cell No)</label>
+          <input type="text" placeholder="MSISDN" id="mxit-msisdn-input" />
+        </div>
+
+        <a id="save" class="go link" onclick="Emulator.saveCredentials()">Save <span class="icon"><span class="image"></span></span></a>
+      </div>
     </div>
     <input id="phone-input" type="text" autocomplete="off" />
   </div>

@@ -4,6 +4,12 @@
 <%= mxit_table_row %>
 <p>This is the root of the dummy app...</p>
 
+<p><b>Current Mxit Params:</b><br />
+<% @mxit_params.each do |k,v| %>
+<%= k %>: <b><%= v %></b><br />
+<% end %>
+</p>
+
 <p><%= mxit_link '/welcome', 'Single-page form' %><p>
 <p><%= mxit_link '/form', 'Multi-step form' %><p>
 <p><%= mxit_link '/index', 'An extra link' %><p>
