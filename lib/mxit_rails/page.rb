@@ -209,7 +209,7 @@ module MxitRails
 
       # Ensure previous inputs are in the params hash
       mxit_form_session.each do |key, value|
-        params[key.to_sym] = value
+        params[key.to_sym] ||= value
       end
 
       # Proceed to the (first) step if no step is in the session

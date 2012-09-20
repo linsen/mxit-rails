@@ -32,7 +32,7 @@ class FormController < ApplicationController
         input :age, 'What is your age?'
 
         validate :numeric, 'Please enter numeric digits only'
-        validate :max_length, 2, 'Your age cannot be more than 99'
+        validate :max_value, 95, 'Your age cannot be more than 95'
       end
 
       step :gender do

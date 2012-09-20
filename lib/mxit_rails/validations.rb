@@ -21,5 +21,14 @@ module MxitRails
       return input.blank? || (input.length <= max)
     end
 
+    def self.min_value? input, min
+      return input.to_f >= min
+    end
+
+    def self.max_value? input, max
+      return input.to_f <= max
+    end
+
+
   end
 end
