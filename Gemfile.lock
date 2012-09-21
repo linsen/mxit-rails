@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mxit-rails (0.2.4)
+    mxit-rails (0.2.5)
       rails (~> 3.2.3)
       sass-rails (~> 3.2.1)
 

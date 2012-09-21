@@ -29,10 +29,9 @@
   <div id="controls">
     <div id="default">
       <span id="not-registered">No credentials</span>
-      <span id="registered">Mxit Login: <span id="mxit-login"></span></span>
+      <span id="registered">Mxit <span id="mxit-login-id-label"></span>: <span id="mxit-login-id"></span></span>
 
-      <a id="unlink" class="go link" onclick="Emulator.clearCredentials()">Clear Credentials <span class="icon"><span class="image"></span></span></a>
-      <a id="link" class="go link" onclick="Emulator.enterCredentials()">Set Credentials <span class="icon"><span class="image"></span></span></a>
+      <a id="link" class="go link" onclick="Emulator.editCredentials()">Edit Credentials <span class="icon"><span class="image"></span></span></a>
     </div>
 
     <div id="phone-links">

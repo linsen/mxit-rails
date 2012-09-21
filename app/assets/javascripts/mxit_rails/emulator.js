@@ -80,10 +80,16 @@ Emulator = (function() {
       $('#center').attr('src', url);
     },
 
-    enterCredentials: function() {
-      $('#default').hide();
+    editCredentials: function() {
       $('#center').hide();
       $('#inputs').show();
+
+      values = ['id', 'login', 'nick', 'distribution-code', 'msisdn'];
+      for (var i in values) {
+        var str = values[i];
+        var value = localStorage.getItem('mxit-' + str);
+        $('#mxit-' + str + '-input').val(value);
+      }
     },
 
     saveCredentials: function() {
@@ -93,7 +99,6 @@ Emulator = (function() {
         localStorage.setItem('mxit-' + str, $('#mxit-' + str + '-input').val());
       }
 
-      $('#default').show();
       $('#inputs').hide();
       $('#center').show();
       Emulator.setCredentials();
@@ -101,25 +106,20 @@ Emulator = (function() {
 
     setCredentials: function() {
       Emulator.setCookie();
-      $('#link').hide();
-      $('#unlink').show();
+
       $('#registered').show();
       $('#not-registered').hide();
-      $('#mxit-login').html(localStorage.getItem('mxit-login'));
-    },
 
-    clearCredentials: function() {
-      values = ['id', 'login', 'nick', 'distribution-code', 'msisdn'];
-      for (var i in values) {
-        var str = values[i];
-        localStorage.removeItem('mxit-' + str);
+      if (localStorage.getItem('mxit-login')) {
+        $('#mxit-login-id-label').html('Login');
+        $('#mxit-login-id').html(localStorage.getItem('mxit-login'));
+      } else if (localStorage.getItem('mxit-id')) {
+        $('#mxit-login-id-label').html('ID');
+        $('#mxit-login-id').html(localStorage.getItem('mxit-id'));
+      } else {
+        $('#not-registered').show();
+        $('#registered').hide();
       }
-
-      Emulator.clearCookie();
-      $('#link').show();
-      $('#unlink').hide();
-      $('#registered').hide();
-      $('#not-registered').show();
     },
 
     iframe: function() {
@@ -241,11 +241,7 @@ Emulator = (function() {
 
 $(function() {
 
-  if (localStorage.getItem('mxit-id')) {
-    Emulator.setCredentials();
-  } else {
-    Emulator.clearCredentials();
-  }
+  Emulator.setCredentials();
 
   Emulator.expandCollapse();
 
