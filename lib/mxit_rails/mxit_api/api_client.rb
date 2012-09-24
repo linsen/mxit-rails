@@ -20,7 +20,7 @@ module MxitRails::MxitApi
 
     def request_app_auth(scopes)
       if scopes.empty?
-        raise MxitApi::Exception.new("No scopes were provided.")
+        raise MxitRails::MxitApi::Exception.new("No scopes were provided.")
       end
 
       response = http_client(MXIT_AUTH_TOKEN_URI) do |http, path|
@@ -38,7 +38,7 @@ module MxitRails::MxitApi
         @auth_token = AuthToken.new(JSON.parse(response.body))
 
       else
-        raise MxitApi::RequestException.new(response.message, response.code)
+        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
       end
     end
 
@@ -50,7 +50,7 @@ module MxitRails::MxitApi
     # scopes - list of scopes to which access is required
     def user_code_request_uri(redirect_uri, state, scopes)
       if scopes.empty?
-        raise MxitApi::Exception.new("No scopes were provided.")
+        raise MxitRails::MxitApi::Exception.new("No scopes were provided.")
       end
 
       # build parameters
@@ -84,7 +84,7 @@ module MxitRails::MxitApi
         @auth_token = AuthToken.new(JSON.parse(response.body))
 
       else
-        raise MxitApi::RequestException.new(response.message, response.code)
+        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
       end
     end
 
@@ -99,13 +99,14 @@ module MxitRails::MxitApi
       end
 
       if response.code != '200'
-        raise MxitApi::RequestException.new(response.message, response.code)
+        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
       end
     end
 
     def refresh_token(auth_token)
       if auth_token.refresh_token.nil?
-        raise MxitApi::Exception.new("The provided auth token doesn't have a refresh token.")
+        raise MxitRails::MxitApi::Exception.new("The provided auth token doesn't have a refresh " +
+          "token.")
       end
 
       response = http_client(MXIT_AUTH_TOKEN_URI) do |http, path|
@@ -123,35 +124,41 @@ module MxitRails::MxitApi
         auth_token = AuthToken.new(JSON.parse(response.body))
 
       else
-        raise MxitApi::RequestException.new(response.message, response.code)
+        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
       end
     end
 
     ### API methods requiring authorisation.
 
+    # When sending as the app the `message/send` scope is required otherwise `message/user`
     def send_message(from, to, body, contains_markup, auth_token=nil)
       auth_token = auth_token || @auth_token
-      check_auth_token(auth_token, ["/message/send", "/message/user"])
+
+      if from == @app_name
+        check_auth_token(auth_token, ["message/send"])
+      else
+        check_auth_token(auth_token, ["message/user"])
+      end
 
       response = http_client(MXIT_API_URI + "/message/send/") do |http, path|
 
-      request = Net::HTTP::Post.new(path)
-      set_api_headers(request, auth_token.access_token)
+        request = Net::HTTP::Post.new(path)
+        set_api_headers(request, auth_token.access_token)
 
-      request.body = {
-        "Body" => body,
-        "ContainsMarkup" => contains_markup,
-        "From" => from,
-        "To" => to
-        # "Spool" => default(true)
-        # "SpoolTimeOut" => default(60*60*24*7)
+        request.body = {
+          "Body" => body,
+          "ContainsMarkup" => contains_markup,
+          "From" => from,
+          "To" => to
+          # "Spool" => default(true)
+          # "SpoolTimeOut" => default(60*60*24*7)
         }.to_json
 
         http.request(request)
       end
 
       if response.code != '200'
-        raise MxitApi::RequestException.new(response.message, response.code)
+        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
       end
     end
 
@@ -167,7 +174,7 @@ module MxitRails::MxitApi
     #   @Blocked - Return all entries that was blocked
     def get_contact_list(filter, options={ :skip => nil, :count => nil, :auth_token => nil })
       auth_token = options[:auth_token] || @auth_token
-      check_auth_token(auth_token, ["/graph/read"])
+      check_auth_token(auth_token, ["graph/read"])
 
       response = http_client(MXIT_API_URI + "/user/socialgraph/contactlist") do |http, path|
 
@@ -187,13 +194,13 @@ module MxitRails::MxitApi
         data = JSON.parse(response.body)
 
       else
-        raise MxitApi::RequestException.new(response.message, response.code)
+        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
       end
     end
 
     def spam_users(mxit_ids, message, contains_markup)
       Rails.logger.info('Requesting MXit API auth...')
-      request_app_auth("message/send")
+      request_app_auth(["message/send"])
       Rails.logger.info('Finished MXit API auth.')
 
       batch_size = 50
@@ -244,10 +251,13 @@ module MxitRails::MxitApi
 
       def check_auth_token(auth_token, scopes)
         if auth_token.nil?
-          raise MxitApi::Exception.new("No auth token has been set/provided.")
+          raise MxitRails::MxitApi::Exception.new("No auth token has been set/provided.")
         elsif not auth_token.has_scopes? scopes
-          raise MxitApi::Exception.new("The auth token doesn't have the required scopes.")
+          raise MxitRails::MxitApi::Exception.new("The auth token doesn't have the required " +
+            "scope(s).")
         end
       end
 
   end
+
+end

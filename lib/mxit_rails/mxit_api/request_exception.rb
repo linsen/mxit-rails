@@ -1,5 +1,5 @@
 module MxitRails::MxitApi
-  class RequestException < MxitApi::Exception
+  class RequestException < MxitRails::MxitApi::Exception
     attr_reader :code
     def initialize(message, code)
       super(message)
