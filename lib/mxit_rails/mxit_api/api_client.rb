@@ -23,9 +23,9 @@ module MxitRails::MxitApi
         raise MxitApi::Exception.new("No scopes were provided.")
       end
 
-      response = http_client(MXIT_AUTH_TOKEN_URI) do |http|
+      response = http_client(MXIT_AUTH_TOKEN_URI) do |http, path|
 
-        request = new_token_request({
+        request = new_post_request(path, {
           "grant_type" => "client_credentials",
           "scope" => scopes.join(" ")
         })
@@ -68,9 +68,9 @@ module MxitRails::MxitApi
     # NOTE: `user_code_request_uri` must be used before `request_user_auth` because it provides the
     # `code` argument. `redirect_uri` must match the one used in the `user_code_request_uri` call
     def request_user_auth(code, redirect_uri)
-      response = http_client(MXIT_AUTH_TOKEN_URI) do |http|
+      response = http_client(MXIT_AUTH_TOKEN_URI) do |http, path|
 
-        request = new_token_request({
+        request = new_post_request(path, {
           "grant_type" => "authorization_code",
           "code" => code,
           "redirect_uri" => redirect_uri
@@ -82,6 +82,45 @@ module MxitRails::MxitApi
       case response
       when Net::HTTPSuccess then
         @auth_token = AuthToken.new(JSON.parse(response.body))
+
+      else
+        raise MxitApi::RequestException.new(response.message, response.code)
+      end
+    end
+
+    def revoke_token(auth_token)
+      response = http_client(MXIT_AUTH_BASE_URI + "/revoke") do |http, path|
+
+        request = new_post_request(path, {
+          "token" => auth_token.access_token
+        })
+
+        http.request(request)
+      end
+
+      if response.code != '200'
+        raise MxitApi::RequestException.new(response.message, response.code)
+      end
+    end
+
+    def refresh_token(auth_token)
+      if auth_token.refresh_token.nil?
+        raise MxitApi::Exception.new("The provided auth token doesn't have a refresh token.")
+      end
+
+      response = http_client(MXIT_AUTH_TOKEN_URI) do |http, path|
+
+        request = new_post_request(path, {
+          "grant_type" => "refresh_token",
+          "refresh_token" => auth_token.refresh_token
+        })
+
+        http.request(request)
+      end
+
+      case response
+      when Net::HTTPSuccess then
+        auth_token = AuthToken.new(JSON.parse(response.body))
 
       else
         raise MxitApi::RequestException.new(response.message, response.code)
@@ -186,8 +225,8 @@ module MxitRails::MxitApi
         end
       end
 
-      def new_token_request(form_data)
-        request = Net::HTTP::Post.new("/token")
+      def new_post_request(path, form_data)
+        request = Net::HTTP::Post.new(path)
         request.basic_auth(@client_id, @client_secret)
         request.set_form_data(form_data)
         return request
