@@ -224,10 +224,6 @@ module MxitRails::MxitApi
 
         use_ssl = uri.scheme == 'https'
         response = Net::HTTP.start(uri.host, uri.port, :use_ssl => use_ssl) do |http|
-          if use_ssl
-            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          end
-
           yield(http, uri.path)
         end
       end
