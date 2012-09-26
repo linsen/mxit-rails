@@ -229,6 +229,10 @@ module MxitRails
       redirect_to request.path
     end
 
+    def reset!
+      redirect_to "#{request.path}?_mxit_reset=true"
+    end
+
     def form &block
       descriptor.type = :form
       session[:_mxit_rails_params] ||= {}

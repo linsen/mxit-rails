@@ -3,6 +3,10 @@ class FormController < ApplicationController
   include MxitRails::Page
 
   def index
+    if params[:reset]
+      reset! and return
+    end
+
     form do
       step :start do
         proceed 'Start the form'

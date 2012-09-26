@@ -15,9 +15,9 @@ Installation
 ------------
 To use the gem, just include the gem your rails projects' gemfile:
 
-    gem 'mxit-rails', '~> 0.1.2'
+    gem 'mxit-rails', '~> 0.2.7'
 
-The newest version is 0.1.2 - it is not recommended to use any earlier versions.
+The newest version is 0.2.7 - it is not recommended to use any earlier versions.
 
 Basic usage
 -----------
