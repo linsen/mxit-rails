@@ -1,5 +1,3 @@
-:markup: markdown
-
 Mxit Rails
 ==========
 
