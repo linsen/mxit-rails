@@ -3,6 +3,6 @@ class EmulatorController < ApplicationController
 
   def index
     @root_path = Rails.application.config.mxit_root
-    @path = params[:path]
+    @path = request.fullpath.sub(/^\/emulator/, '')
   end
 end

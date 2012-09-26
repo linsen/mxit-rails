@@ -47,7 +47,7 @@ module MxitRailsHelper
   end
 
   def mxit_proceed content
-    "<br /><b style=\"#{ mxit_style :link }\"> &raquo; #{content}</b><br />".html_safe
+    "<br /><b style=\"#{ mxit_style :link }\"> &gt; #{content}</b><br />".html_safe
   end
 
 end

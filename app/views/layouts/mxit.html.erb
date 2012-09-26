@@ -25,18 +25,13 @@
 
   <%= yield %>
 
-  <% if @_mxit.has_table %>
-    <!-- Close the table if there is one -->
-      <br /></td></tr>
-    </table>
-  <% end %>
-
   <% if mxit_validation_message %>
-    <b><%= mxit_validation_message %></b><br />
+    <br /><b><%= mxit_validation_message %></b>
   <% elsif flash[:notice] %>
-    <b><%= flash[:notice] %></b><br />
+    <br /><b><%= flash[:notice] %></b>
   <% end %>
 
+  <br />
   <% if @_mxit.input %>
     <%= mxit_proceed @_mxit.input_label %>
     <form method="POST" action="<%= request.path %>">
@@ -52,6 +47,13 @@
 
   <% elsif @_mxit.proceed %>
     <%= mxit_proceed mxit_link(request.path, @_mxit.proceed.to_s.capitalize, {_mxit_rails_submit: 'Proceed'}) %>
+  <% end %>
+
+
+  <% if @_mxit.has_table %>
+    <!-- Close the table if there is one -->
+      </td></tr>
+    </table>
   <% end %>
 
 </body>

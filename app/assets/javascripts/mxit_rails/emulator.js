@@ -65,7 +65,10 @@ Emulator = (function() {
 
     getUrl: function() {
       if (typeof($('#center').attr('src')) != 'undefined') {
-        return Emulator.iframe().location.pathname;
+        var url = Emulator.iframe().location.pathname;
+        if (Emulator.iframe().location.search)
+          url += Emulator.iframe().location.search;
+        return url;
       }
       return null;
     },
