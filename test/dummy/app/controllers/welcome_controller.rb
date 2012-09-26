@@ -10,7 +10,7 @@ class WelcomeController < ApplicationController
       # NB Don't put a return here - it causes much unhappiness
       input != 'custom'
     end
-    validate :numeric, 'Please enter a numeric digits only'
+    validate :numeric, 'Please enter numeric digits only'
     validate :min_length, 10, 'Numbers must be at least 10 digits long'
     validate :max_length, 11, 'Numbers cannot be longer than 11 digits'
 

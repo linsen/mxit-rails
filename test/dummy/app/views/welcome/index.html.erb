@@ -4,10 +4,8 @@
 <%= mxit_table_row %>
 <%= mxit_nav_link '/', 'Back' %>
 
-<% if mxit_validation_message %>
-  <%= mxit_validation_message %>
-<% else %>
-  <p>You're visiting the templater-in-progress.  It's now <%= @time %>.</p>
-  <p>Please enter your cellphone number to proceed</p>
+<% unless mxit_validation_message %>
+  You're visiting the templater-in-progress.  It's now <%= @time %>.<br /><br />
+  Please enter your cellphone number to proceed
 <% end %>
 

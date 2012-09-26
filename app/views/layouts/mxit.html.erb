@@ -27,8 +27,14 @@
 
   <% if @_mxit.has_table %>
     <!-- Close the table if there is one -->
-      </td></tr>
+      <br /></td></tr>
     </table>
+  <% end %>
+
+  <% if mxit_validation_message %>
+    <b><%= mxit_validation_message %></b><br />
+  <% elsif flash[:notice] %>
+    <b><%= flash[:notice] %></b><br />
   <% end %>
 
   <% if @_mxit.input %>

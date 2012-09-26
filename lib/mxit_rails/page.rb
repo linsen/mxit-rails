@@ -70,6 +70,7 @@ module MxitRails
 
       @_mxit = descriptor
       @_mxit_validated = true
+      @_mxit_validation_types = []
       @_mxit_validation_messages = []
 
       clean_session
@@ -118,6 +119,7 @@ module MxitRails
 
       valid = true
       input = descriptor.input.to_sym
+      validation_type = arguments.first
 
       if block.nil?
         parameter = arguments[1..-2][0] # Will return nil if there isn't an argument
@@ -127,14 +129,23 @@ module MxitRails
         end
 
       else
+        validation_type = :custom
         valid = yield(params[input])
       end
 
       if !valid
         @_mxit_validated = false
+        @_mxit_validation_types << validation_type
         @_mxit_validation_messages << arguments.last
       end
 
+    end
+
+    def validations_failed &block
+      descriptor.validations_failed = block
+    end
+    def validated &block
+      descriptor.validated = block
     end
 
     def submit &block
@@ -143,13 +154,10 @@ module MxitRails
       if descriptor.form? && next_step?
         yield
 
-      elsif params.include?(:_mxit_rails_submit)
-        if @_mxit_validated
-          yield
-        end
+      elsif (params.include?(:_mxit_rails_submit) && @_mxit_validated) || (self.current_step == :_submit)
+        yield
       end
     end
-
 
     def current_step
       return nil if session[:_mxit_rails_step].nil?
@@ -176,6 +184,12 @@ module MxitRails
 
         if params.include?(:_mxit_rails_submit)
           if @_mxit_validated
+            # Validated hook
+            unless descriptor.validated.nil?
+              descriptor.validated.call
+            end
+
+            # Store input in session
             if descriptor.input
               input = descriptor.input.to_sym
               mxit_form_session[input] = params[input]
@@ -185,9 +199,15 @@ module MxitRails
               mxit_form_session[select] = params[select]
             end
 
+            # Clear submission flag from params and go to next step
             params.delete :_mxit_rails_submit
             @next_step = true
             return
+          else
+            # Validations_failed hook
+            unless descriptor.validations_failed.nil?
+              descriptor.validations_failed.call(@_mxit_validation_types, @_mxit_validation_messages)
+            end
           end
         end
 
@@ -199,6 +219,12 @@ module MxitRails
 
     def skip_to step_name
       self.current_step = step_name
+      # A redirect might not be absolutely required, but it makes things much simpler
+      redirect_to request.path
+    end
+
+    def submit!
+      self.current_step = :_submit
       # A redirect might not be absolutely required, but it makes things much simpler
       redirect_to request.path
     end

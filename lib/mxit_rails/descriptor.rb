@@ -18,7 +18,7 @@ module MxitRails
     attr_accessor :action
     attr_accessor :type
 
-    descr_accessor :proceed
+    attr_accessor :proceed
 
     attr_accessor :input
     attr_accessor :input_label
@@ -28,6 +28,9 @@ module MxitRails
     attr_accessor :select_options
 
     attr_accessor :has_table
+
+    attr_accessor :validations_failed
+    attr_accessor :validated
 
     def initialize name, action, parent=nil
       @parent_descriptor = parent

@@ -12,14 +12,26 @@ class FormController < ApplicationController
       step :name do
         input :name, 'What is your name?'
         validate :not_blank, 'You must enter a name'
+        validate :min_length, 2, 'Names are at least 2 characters long'
         validate 'That is not a cool enough name' do |input|
           input != 'Steve'
+        end
+
+        validations_failed do |types, messages|
+          logger.info "Failed: #{types}"
+        end
+        validated do
+          logger.info "Validated!"
         end
       end
 
       step :surname do
         if params[:name] == 'Linsen'
           skip_to :age
+          return
+        end
+        if params[:name] == 'David'
+          submit!
           return
         end
 

@@ -8,7 +8,7 @@ module MxitRailsHelper
     str = ''
     if @_mxit.has_table
       # Close the previous row if there is one
-      str += "</td></tr>"
+      str += "<br /></td></tr>"
     else
       # Start a new table
       str += '<table title="mxit:table:full" style="width:100%" name="main_table" cellspacing="0" cellpadding="0">'
@@ -17,7 +17,7 @@ module MxitRailsHelper
     @_mxit.has_table = true
 
     # Start the new row
-    style = mxit_style *styles
+    style = styles.empty? ? mxit_style(:body) : mxit_style(*styles)
     str += "<tr><td style=\"#{ style }\">"
     str.html_safe
   end
@@ -43,11 +43,11 @@ module MxitRailsHelper
   end
 
   def mxit_nav_link target, label
-    "<p style=\"#{ mxit_style :right }\">#{ mxit_link target, label }</p>".html_safe
+    "#{ mxit_link target, label }<br /><br />".html_safe
   end
 
   def mxit_proceed content
-    "<p><b style=\"#{ mxit_style :link }\">&gt; #{content}</b></p>".html_safe
+    "<br /><b style=\"#{ mxit_style :link }\"> &raquo; #{content}</b><br />".html_safe
   end
 
 end
