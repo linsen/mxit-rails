@@ -1,4 +1,4 @@
-:markdown:
+:markup: markdown
 
 Mxit Rails
 ==========
