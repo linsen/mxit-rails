@@ -198,23 +198,24 @@ module MxitRails::MxitApi
       end
     end
 
-    def spam_users(mxit_ids, message, contains_markup)
+    def batch_notify_users(mxit_ids, message, contains_markup)
       Rails.logger.info('Requesting MXit API auth...')
       request_app_auth(["message/send"])
       Rails.logger.info('Finished MXit API auth.')
 
       batch_size = 50
-      Rails.logger.info('Starting to spam users in batches of ' + batch_size.to_s + '...')
+      Rails.logger.info('Starting to notify users in batches of ' + batch_size.to_s + '...')
       i = 0
       while i < mxit_ids.count
-        to = mxit_ids[i, batch_size].join(',')
+        current_batch = mxit_ids[i, batch_size]
         i += batch_size
 
+        to = current_batch.join(',')
         send_message(@app_name, to, message, contains_markup)
 
-        Rails.logger.info("Total users spammed: " + i.to_s)
+        Rails.logger.info("Total users notified: " + current_batch.count.to_s)
       end
-      Rails.logger.info('Finished spamming!')
+      Rails.logger.info('Finished notifying!')
     end
 
     private
@@ -224,10 +225,6 @@ module MxitRails::MxitApi
 
         use_ssl = uri.scheme == 'https'
         response = Net::HTTP.start(uri.host, uri.port, :use_ssl => use_ssl) do |http|
-          if use_ssl
-            http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-          end
-
           yield(http, uri.path)
         end
       end
