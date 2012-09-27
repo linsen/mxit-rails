@@ -85,6 +85,9 @@ module MxitRails
           end
         end
         session[:_mxit_rails_page] = "#{controller_name}##{action_name}"
+        params[:first_visit] = true
+      else 
+        params[:first_visit] = false
       end
     end
 
