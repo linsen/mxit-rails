@@ -7,6 +7,8 @@ class FormController < ApplicationController
       reset! and return
     end
 
+    @first_visit = params[:first_visit]
+
     form do
       step :start do
         proceed 'Start the form'
