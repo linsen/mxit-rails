@@ -34,10 +34,6 @@
   <br />
   <% if @_mxit.input %>
     <%= mxit_proceed @_mxit.input_label %>
-    <form method="POST" action="<%= request.path %>">
-        <input type="text" name="<%= @_mxit.input %>" />
-        <input type="submit" name="_mxit_rails_submit" value="Proceed" />
-    </form>
 
   <% elsif @_mxit.select %>
     <%= mxit_proceed @_mxit.select_label %>
@@ -54,6 +50,14 @@
     <!-- Close the table if there is one -->
       </td></tr>
     </table>
+  <% end %>
+
+  <% if @_mxit.input %>
+    <!-- The form must be outside the table - put it right at the bottom of the page -->
+    <form method="POST" action="<%= request.path %>">
+        <input type="text" name="<%= @_mxit.input %>" />
+        <input type="submit" name="_mxit_rails_submit" value="Proceed" />
+    </form>
   <% end %>
 
 </body>
