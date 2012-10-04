@@ -78,13 +78,14 @@ module MxitRails
 
     def clean_session
       # Drop all mxit items from session if the page doesn't match the current one
-      if (session[:_mxit_rails_page] != "#{controller_name}##{action_name}") || (params[:_mxit_reset])
+      page_identifier = request.path.sub(/^\/emulator/, '')
+      if (session[:_mxit_rails_page] != page_identifier) || (params[:_mxit_reset])
         session.each do |key, value|
           if key.to_s.match(/_mxit_rails_/)
             session[key] = nil
           end
         end
-        session[:_mxit_rails_page] = "#{controller_name}##{action_name}"
+        session[:_mxit_rails_page] = page_identifier
         params[:first_visit] = true
       else 
         params[:first_visit] = false
