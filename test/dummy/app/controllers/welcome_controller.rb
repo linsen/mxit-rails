@@ -25,6 +25,24 @@ class WelcomeController < ApplicationController
     end
   end
 
+  def single
+    select :select, 'Select an option', {'A' => 'Option A', 'B' => 'Option B', 'C' => 'Option C'}, selected: 'B', numbered_list: true
+
+    submit do
+      logger.info "Value: #{params[:select]}"
+      redirect_to '/index/success' and return
+    end
+  end
+
+  def multi
+    multi_select :select, 'Select all that apply', {'A' => 'Option A', 'B' => 'Option B', 'C' => 'Option C'}, selected: ['B', 'C'], numbered_list: true
+
+    submit do
+      logger.info "Value: #{params[:select]}"
+      redirect_to '/index/success' and return
+    end
+  end
+
   def easter_egg
   end
 

@@ -33,16 +33,33 @@
 
   <br />
   <% if @_mxit.input %>
-    <%= mxit_proceed @_mxit.input_label %>
+    <% if @_mxit.input_label %>
+      <%= mxit_proceed @_mxit.input_label %>
+    <% end %>
 
   <% elsif @_mxit.select %>
-    <%= mxit_proceed @_mxit.select_label %>
-    <% @_mxit.select_options.each do |key, value| %>
-    - <%= mxit_link(request.path, value, {_mxit_rails_submit: 'Proceed', @_mxit.select => key}) %><br />
+    <% if @_mxit.multi_select %>
+      <% if @_mxit.select_label %>
+        <%= @_mxit.select_label %><br />
+      <% end %>
+
+      <% @_mxit.select_options.each do |value, label| %>
+        <%= mxit_select_row label, value, @_mxit.selected.include?(value) %>
+      <% end %>
+
+      <%= mxit_proceed link_to(@_mxit.multi_select_next, "#{request.path}?_mxit_rails_submit=true&_mxit_rails_multi_select=#{@_mxit.select}") %>
+
+    <% else %>
+      <% if @_mxit.select_label %>
+        <%= mxit_proceed @_mxit.select_label %>
+      <% end %>
+      <% @_mxit.select_options.each do |value, label| %>
+        <%= mxit_select_row label, value, @_mxit.selected.include?(value) %>
+      <% end %>
     <% end %>
 
   <% elsif @_mxit.proceed %>
-    <%= mxit_proceed mxit_link(request.path, @_mxit.proceed.to_s.capitalize, {_mxit_rails_submit: 'Proceed'}) %>
+    <%= mxit_proceed link_to(@_mxit.proceed.to_s.capitalize, "#{request.path}?_mxit_rails_submit=true}") %>
   <% end %>
 
 
@@ -56,7 +73,7 @@
     <!-- The form must be outside the table - put it right at the bottom of the page -->
     <form method="POST" action="<%= request.path %>">
         <input type="text" name="<%= @_mxit.input %>" />
-        <input type="submit" name="_mxit_rails_submit" value="Proceed" />
+        <input type="submit" name="_mxit_rails_submit" value="true" />
     </form>
   <% end %>
 
