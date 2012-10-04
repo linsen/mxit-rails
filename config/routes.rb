@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  if Rails.env.development?
+  unless Rails.env.production?
     match '/emulator(/*path)', :controller => 'emulator', :action => 'index'
   end
 

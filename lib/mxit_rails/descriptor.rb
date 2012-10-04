@@ -1,17 +1,5 @@
 module MxitRails
   class Descriptor
-    def self.descr_accessor variable
-      # Custom accessor macro that will look in a parent descriptor if a value isn't found (i.e. is nil)
-      attr_writer variable
-      define_method "#{variable}" do
-        value = instance_variable_get("@#{variable}")
-        if value.nil? && !parent_descriptor.nil?
-          value = parent_descriptor.send("#{variable}")
-        end
-        value
-      end
-    end
-
     attr_accessor :parent_descriptor
 
     attr_accessor :name
@@ -26,6 +14,10 @@ module MxitRails
     attr_accessor :select
     attr_accessor :select_label
     attr_accessor :select_options
+    attr_accessor :selected
+    attr_accessor :multi_select
+    attr_accessor :multi_select_next
+    attr_accessor :numbered_list
 
     attr_accessor :has_table
 
@@ -38,10 +30,6 @@ module MxitRails
       @action = action.to_sym
       @validations = []
       @steps = []
-    end
-
-    def url
-      MxitRails::Router.url "#{name}/#{action}"
     end
 
     def form?

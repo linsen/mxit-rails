@@ -22,18 +22,6 @@ module MxitRailsHelper
     str.html_safe
   end
 
-  def mxit_link route, label, variables=nil
-    unless variables.nil?
-      var_strings = []
-      #TODO: Use default Rails get encoding
-      variables.each do |key, value|
-        var_strings << "#{key}=#{value}"
-      end
-      route += "?#{var_strings.join('&')}"
-    end
-    output = "<a href=\"#{route}\">#{label}</a>".html_safe
-  end
-
   def mxit_style *names
     content = []
     names.each do |name|
@@ -42,12 +30,34 @@ module MxitRailsHelper
     content.join(' ').html_safe
   end
 
-  def mxit_nav_link target, label
-    "#{ mxit_link target, label }<br /><br />".html_safe
-  end
-
   def mxit_proceed content
     "<br /><b style=\"#{ mxit_style :link }\"> &gt; #{content}</b><br />".html_safe
+  end
+
+  def mxit_select_row label, value, selected
+    @_mxit_select_index ||= 0
+    @_mxit_select_index += 1
+
+    target = "#{request.path}?"
+    if @_mxit.multi_select
+      # Which input to modify, and which key to toggle for that input
+      target += "_mxit_rails_multi_select=#{@_mxit.select}&_mxit_rails_multi_select_value=#{value}"
+    else
+      target += "_mxit_rails_submit=true&#{@_mxit.select}=#{value}"
+    end
+
+    content = selected ? "<b>#{label}</b>" : label
+
+    output = "<a href=\"#{target}\">"
+    if @_mxit.numbered_list
+      output += "#{@_mxit_select_index}</a>) #{content}"
+    else
+      output += "#{label}</a>"
+      output = (selected ? '+ ' : '- ') + output
+    end
+    output += "<br />"
+
+    output.html_safe
   end
 
 end
