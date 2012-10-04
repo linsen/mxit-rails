@@ -5,6 +5,59 @@ html, body {
   font-weight: normal;
 }
 
+.emulator td {
+  padding: 2px;
+}
+
 .emulator form {
   display: none;
+}
+
+.emulator .emoticon {
+  height: 32px;
+  line-height: 32px;
+  width: 32px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  text-indent: 100px;
+  overflow: hidden;
+
+  &.happy {background-position: 0px 0px;}
+  &.sad {background-position: -32px 0px;}
+  &.winking {background-position: -64px 0px;}
+  &.excited {background-position: -96px 0px;}
+  &.shocked {background-position: -128px 0px;}
+  &.surprised {background-position: -160px 0px;}
+  &.tongue_out {background-position: -192px 0px;}
+  &.embarrassed {background-position: -224px 0px;}
+  &.cool {background-position: -256px 0px;}
+  &.heart {background-position: -288px 0px;}
+  &.flower {background-position: -320px 0px;}
+  &.male {background-position: -352px 0px;}
+  &.female {background-position: -384px 0px;}
+  &.star {background-position: -416px 0px;}
+  &.chilli {background-position: -448px 0px;}
+  &.kiss {background-position: -480px 0px;}
+  &.idea {background-position: -512px 0px;}
+  &.extremely_angry {background-position: -544px 0px;}
+  &.censored {background-position: -576px 0px;}
+  &.grumpy {background-position: -608px 0px;}
+  &.coffee {background-position: -640px 0px;}
+  &.mr_green {background-position: -672px 0px;}
+  &.sick {background-position: -704px 0px;}
+  &.wtf {background-position: -736px 0px;}
+  &.in_love {background-position: -768px 0px;}
+  &.rolling_eyes {background-position: -800px 0px;}
+  &.crying {background-position: -832px 0px;}
+  &.thinking {background-position: -864px 0px;}
+  &.drooling {background-position: -896px 0px;}
+  &.sleepy {background-position: -928px 0px;}
+  &.liar {background-position: -960px 0px;}
+  &.nerdy {background-position: -992px 0px;}
+  &.pirate {background-position: -1024px 0px;}
+  &.bored {background-position: -1056px 0px;}
+  &.cold {background-position: -1088px 0px;}
+  &.confused {background-position: -1120px 0px;}
+  &.hungry {background-position: -1152px 0px;}
+  &.stressed {background-position: -1184px 0px;}
 }

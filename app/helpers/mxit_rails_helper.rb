@@ -50,7 +50,7 @@ module MxitRailsHelper
 
     output = "<a href=\"#{target}\">"
     if @_mxit.numbered_list
-      output += "#{@_mxit_select_index}</a>) #{content}"
+      output += "#{@_mxit_select_index})</a> #{content}"
     else
       output += "#{label}</a>"
       output = (selected ? '+ ' : '- ') + output
