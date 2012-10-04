@@ -7,10 +7,11 @@
 
   <meta name="mxit" content="no_prefix,show_progress,clear_on_new,no_heading" />
 
-  <% if request.headers['x-mxit-login'].nil? %>
+  <% if @_mxit_emulator %>
     <!-- Include a CSS file, but only in a browser/emulator, not on mxit -->
     <%= stylesheet_link_tag "mxit_rails/included" %>
     <style type="text/css">
+      .emulator .emoticon { background-image: url(<%= image_path("mxit_rails/emoticons.png"); %>) }
       a:focus { outline: none; <%= mxit_style :link_hover %> }
     </style>
   <% end %>
@@ -33,13 +34,13 @@
 
   <br />
   <% if @_mxit.input %>
-    <% if @_mxit.input_label %>
+    <% unless @_mxit.input_label.blank? %>
       <%= mxit_proceed @_mxit.input_label %>
     <% end %>
 
   <% elsif @_mxit.select %>
     <% if @_mxit.multi_select %>
-      <% if @_mxit.select_label %>
+      <% unless @_mxit.select_label.blank? %>
         <%= @_mxit.select_label %><br />
       <% end %>
 
@@ -50,7 +51,7 @@
       <%= mxit_proceed link_to(@_mxit.multi_select_next, "#{request.path}?_mxit_rails_submit=true&_mxit_rails_multi_select=#{@_mxit.select}") %>
 
     <% else %>
-      <% if @_mxit.select_label %>
+      <% unless @_mxit.select_label.blank? %>
         <%= mxit_proceed @_mxit.select_label %>
       <% end %>
       <% @_mxit.select_options.each do |value, label| %>

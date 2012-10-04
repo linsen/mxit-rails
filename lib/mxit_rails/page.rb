@@ -66,6 +66,7 @@ module MxitRails
       @_mxit_validated = true
       @_mxit_validation_types = []
       @_mxit_validation_messages = []
+      @_mxit_emulator = request.headers['X-Mxit-UserId-R'].nil?
 
       clean_session
 
@@ -106,6 +107,17 @@ module MxitRails
         params[:first_visit] = true
       else 
         params[:first_visit] = false
+      end
+    end
+
+    # Override render method so as to inject emoticons, etc
+    def render *arguments
+      if @_mxit_emulator
+        output = render_to_string *arguments
+        output = MxitRails::Styles.add_emoticons output
+        super :inline => output
+      else
+        super *arguments
       end
     end
 
