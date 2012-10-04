@@ -7,6 +7,7 @@ module MxitRails
     end
 
     def mxit_form_session
+      session[:_mxit_rails_params] ||= {}
       session[:_mxit_rails_params]
     end
 
@@ -22,22 +23,15 @@ module MxitRails
 
     included do
       if self.ancestors.include? ApplicationController
-        send :rescue_from, MxitRails::Exception, :with => :handle_mxit_exception
         send :layout, 'mxit'
         send :before_filter, :setup
       end
     end
 
-    def redirect! route
-      exception = MxitRails::RedirectException.new('', :redirect)
-      exception.route = route
-      raise exception
-    end
-
     def get_mxit_header_field key
       output = request.headers[key]
       # Only allow cookie-based headers in development
-      if Rails.env.development?
+      unless Rails.env.production?
         output ||= cookies[key.downcase]
       end
       output
@@ -74,11 +68,33 @@ module MxitRails
       @_mxit_validation_messages = []
 
       clean_session
+
+      # Tidy multi-select if needed
+      if params.include? :_mxit_rails_multi_select
+        input = params[:_mxit_rails_multi_select].to_sym
+        params.delete :_mxit_rails_multi_select
+
+        array = mxit_form_session[input] || []
+        set = Set.new array
+        
+        if params.include? :_mxit_rails_multi_select_value
+          value = params[:_mxit_rails_multi_select_value].to_s
+          params.delete :_mxit_rails_multi_select_value
+          if set.include? value
+            set.delete value
+          else
+            set.add value
+          end
+        end
+
+        params[input] = set.to_a
+        mxit_form_session[input] = set.to_a
+      end
     end
 
     def clean_session
       # Drop all mxit items from session if the page doesn't match the current one
-      page_identifier = request.path.sub(/^\/emulator/, '')
+      page_identifier = request.path
       if (session[:_mxit_rails_page] != page_identifier) || (params[:_mxit_reset])
         session.each do |key, value|
           if key.to_s.match(/_mxit_rails_/)
@@ -92,20 +108,35 @@ module MxitRails
       end
     end
 
-    def handle_mxit_exception exception
-      if exception.kind_of? MxitRails::RedirectException 
-        redirect_to(exception.route) and return
-      end
-    end
-
     def input input_name, input_label
       descriptor.input = input_name
       descriptor.input_label = input_label
     end
-    def select select_name, select_label, select_options
+    def select select_name, select_label, select_options, options = {}
       descriptor.select = select_name
       descriptor.select_label = select_label
       descriptor.select_options = select_options
+      if options.include? :selected
+        raise "Invalid :selected options for select - string expected" unless options[:selected].is_a?(String)
+        # Store in an array so that the format is the same as multi_select
+        descriptor.selected = [ options[:selected] ]
+      end
+      descriptor.numbered_list = true if options[:numbered_list]
+      descriptor.multi_select = false
+    end
+    def multi_select select_name, select_label, select_options, options = {}
+      descriptor.select = select_name
+      descriptor.select_label = select_label
+      descriptor.select_options = select_options
+      if options.include? :selected
+        raise "Invalid :selected options for multi_select - array expected" unless options[:selected].is_a?(Array)
+        #TODO: Check the array elements are all strings
+      end
+      mxit_form_session[select_name] ||= options[:selected] || []
+      descriptor.selected = mxit_form_session[select_name]
+      descriptor.numbered_list = true if options[:numbered_list]
+      descriptor.multi_select = true
+      descriptor.multi_select_next = options[:submit_label] || 'Next'
     end
     def proceed label
       descriptor.proceed = label
@@ -155,10 +186,15 @@ module MxitRails
     def submit &block
       set_descriptor :default
 
-      if descriptor.form? && next_step?
-        yield
+      if descriptor.form? 
+        # Submit if the submit block is reached and the next step should be shown
+        # Also submit if current_step is :_submit -> result of calling submit!
+        if next_step? || (self.current_step == :_submit)
+          yield
+        end
 
-      elsif (params.include?(:_mxit_rails_submit) && @_mxit_validated) || (self.current_step == :_submit)
+      # For non-form pages, just check that something was submitted and validations passed
+      elsif (params.include?(:_mxit_rails_submit) && @_mxit_validated)
         yield
       end
     end
