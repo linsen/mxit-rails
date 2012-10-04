@@ -75,10 +75,11 @@ module MxitRails
         params.delete :_mxit_rails_multi_select
 
         array = mxit_form_session[input] || []
+        array.map! {|item| item.to_sym}
         set = Set.new array
-        
+
         if params.include? :_mxit_rails_multi_select_value
-          value = params[:_mxit_rails_multi_select_value].to_s
+          value = params[:_mxit_rails_multi_select_value].to_sym
           params.delete :_mxit_rails_multi_select_value
           if set.include? value
             set.delete value
@@ -87,8 +88,8 @@ module MxitRails
           end
         end
 
-        params[input] = set.to_a
-        mxit_form_session[input] = set.to_a
+        params[input] = set.to_a.map {|item| item.to_s}
+        mxit_form_session[input] = set.to_a.map {|item| item.to_sym}
       end
     end
 
@@ -115,11 +116,12 @@ module MxitRails
     def select select_name, select_label, select_options, options = {}
       descriptor.select = select_name
       descriptor.select_label = select_label
-      descriptor.select_options = select_options
+      descriptor.select_options = {}
+      select_options.each {|k,v| descriptor.select_options[k.to_s.to_sym] = v}
       if options.include? :selected
-        raise "Invalid :selected options for select - string expected" unless options[:selected].is_a?(String)
-        # Store in an array so that the format is the same as multi_select
-        descriptor.selected = [ options[:selected] ]
+        raise "Invalid :selected options for select - string expected, array received" if options[:selected].is_a?(Array)
+        # Convert to string first so that integer values are handled properly
+        descriptor.selected = [ options[:selected].to_s.to_sym ]
       end
       descriptor.numbered_list = true if options[:numbered_list]
       descriptor.multi_select = false
@@ -127,10 +129,11 @@ module MxitRails
     def multi_select select_name, select_label, select_options, options = {}
       descriptor.select = select_name
       descriptor.select_label = select_label
-      descriptor.select_options = select_options
+      descriptor.select_options = {}
+      select_options.each {|k,v| descriptor.select_options[k.to_s.to_sym] = v}
       if options.include? :selected
-        raise "Invalid :selected options for multi_select - array expected" unless options[:selected].is_a?(Array)
-        #TODO: Check the array elements are all strings
+        raise "Invalid :selected options for multi_select - array expected, #{options[:selected].class} received" unless options[:selected].is_a?(Array)
+        options[:selected].map! {|item| item.to_s.to_sym}
       end
       mxit_form_session[select_name] ||= options[:selected] || []
       descriptor.selected = mxit_form_session[select_name]

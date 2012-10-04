@@ -26,7 +26,8 @@ class WelcomeController < ApplicationController
   end
 
   def single
-    select :select, 'Select an option', {'A' => 'Option A', 'B' => 'Option B', 'C' => 'Option C'}, selected: 'B', numbered_list: true
+    # We are being lenient with integer values for the hash
+    select :select, 'Select an option', {1 => 'Option A', 2 => 'Option B', 3 => 'Option C'}, selected: 2, numbered_list: true
 
     submit do
       logger.info "Value: #{params[:select]}"
@@ -35,7 +36,7 @@ class WelcomeController < ApplicationController
   end
 
   def multi
-    multi_select :select, 'Select all that apply', {'A' => 'Option A', 'B' => 'Option B', 'C' => 'Option C'}, selected: ['B', 'C'], numbered_list: true
+    multi_select :select, 'Select all that apply', {1 => 'Option A', 3 => 'Option B', 2 => 'Option C'}, selected: [1, 3], numbered_list: true
 
     submit do
       logger.info "Value: #{params[:select]}"
