@@ -5,6 +5,7 @@ Features:
 - Added emoticons to emulator (the generated html is parsed and they are substituted in where appropriate)
 - Slight default padding added to emulator
 - Added all available Mxit headers to gem (as per Mxit API documentation), with some intelligence added for concatenated fields
+- Added all Mxit headers as settings to the emulator
 - Updated README.md
 
 Bugfixes:
