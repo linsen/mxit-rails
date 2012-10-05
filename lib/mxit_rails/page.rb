@@ -181,12 +181,13 @@ module MxitRails
       descriptor.select_label = select_label
       descriptor.select_options = {}
       select_options.each {|k,v| descriptor.select_options[k.to_s.to_sym] = v}
+      descriptor.selected = []
       if options.include? :selected
         raise "Invalid :selected options for select - string expected, array received" if options[:selected].is_a?(Array)
         # Convert to string first so that integer values are handled properly
         descriptor.selected = [ options[:selected].to_s.to_sym ]
       end
-      descriptor.numbered_list = true if options[:numbered_list]
+      descriptor.numbered_list = options[:numbered_list] ? true : false
       descriptor.multi_select = false
     end
     def multi_select select_name, select_label, select_options, options = {}
@@ -200,7 +201,7 @@ module MxitRails
       end
       mxit_form_session[select_name] ||= options[:selected] || []
       descriptor.selected = mxit_form_session[select_name]
-      descriptor.numbered_list = true if options[:numbered_list]
+      descriptor.numbered_list = options[:numbered_list] ? true : false
       descriptor.multi_select = true
       descriptor.multi_select_next = options[:submit_label] || 'Next'
     end
