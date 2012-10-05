@@ -19,7 +19,7 @@ Installation
 ------------
 To use the gem, just include the gem your rails projects' gemfile:
 
-    gem 'mxit-rails', '~> 0.3.1'
+    gem 'mxit-rails', '~> 0.3.2'
 
 [Heroku](https://devcenter.heroku.com/articles/rails3) provides the simplest way to get a rails app running on the web.
 
@@ -127,7 +127,7 @@ To set the root URL of the emulator, add the following line to `config/applicati
 
 Mxit Headers
 ------------
-The gem automatically parses (some) Mxit headers and makes them available in the `mxit_params` hash.  When using the emulator these values are spoofed with cookies, but in a way transparent to the app itself.  Look at Mxit's [Documentation](http://dev.mxit.com/docs/mobi-portal-api) for more details. Currently the following are available:
+The gem automatically parses (some) Mxit headers and makes them available in the `mxit_params` hash.  When using the emulator these values are spoofed with cookies, but in a way transparent to the app itself.  Look at Mxit's [Documentation](http://dev.mxit.com/docs/mobi-portal-api#headers) for more details. Currently the following are available:
 
 - `:mxit_id` - The user's Mxit ID (m-ID). From `X-Mxit-UserId-R`
 - `:mxit_login` - The user's Mxit Login name. From `X-Mxit-Login` or `X-Mxit-ID-R`
