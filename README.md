@@ -9,6 +9,8 @@ It also includes a browser-based *emulator* with a lot of functionality to simpl
 
 Later versions will also include wrappers for important Mxit APIs.
 
+See the [ChangeLog](https://github.com/linsen/mxit-rails/blob/master/CHANGELOG.md) for latest changes.
+
 
 Sample App
 ----------
@@ -25,7 +27,7 @@ To use the gem, just include the gem your rails projects' gemfile:
 
 [Showoff.io](https://showoff.io) is a great tool for development, allowing you to access localhost from Mxit.
 
-Look at [Mxit Apps](wiki/Mxit-Apps) on the wiki for more information.
+Look at [Mxit Apps](https://github.com/linsen/mxit-rails/wiki/Mxit-Apps) on the wiki for more information.
 
 
 Basic usage
@@ -102,6 +104,8 @@ The following special styles are used in the overall layout, and it is thus reco
 - `:body` - The page body (`body` element in html)
 - `:link` - The colour of links in the page
 - `:link_hover` - The colour and background colour of highlighted links.
+
+Check the [Style Guide](https://github.com/linsen/mxit-rails/wiki/Style-Guide) for more tips. There is also a list of [Emoticons](https://github.com/linsen/mxit-rails/wiki/Emoticons) that can be used on Mxit.
 
 
 Layout
