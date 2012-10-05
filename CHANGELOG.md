@@ -4,6 +4,8 @@ Features:
 - `MxitRails::Styles.add_emoticons` method that will take text and insert html to render emoticons (for use outside the bot proxy)
 - Added emoticons to emulator (the generated html is parsed and they are substituted in where appropriate)
 - Slight default padding added to emulator
+- Added all available Mxit headers to gem (as per Mxit API documentation), with some intelligence added for concatenated fields
+- Updated README.md
 
 Bugfixes:
 - Bracket moved into link for numbered_list select and multi_select
