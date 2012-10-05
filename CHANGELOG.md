@@ -1,3 +1,9 @@
+0.3.3 (5 Oct 2012)
+------------------
+Bugfixes:
+- Single select was broken when default options weren't given
+
+
 0.3.2 (4 Oct 2012)
 ------------------
 Features:
