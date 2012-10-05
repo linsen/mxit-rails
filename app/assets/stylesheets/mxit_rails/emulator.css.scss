@@ -87,7 +87,13 @@ iframe {
 }
 #inputs {
   display: none;
-  padding: 10px;
+  padding: 20px 10px 10px 10px;
+  position: absolute;
+  top: 37px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
 }
   #inputs label {
     font-size: 12px;
@@ -100,13 +106,18 @@ iframe {
     font-size: 16px;
     border: 1px solid #bbb;
     border-radius: 5px;
-    width: 208px;
+    width: 95%;
     height: 22px;
   }
 #save {
   margin-top: 10px;
   display: block;
   text-align: center;
+}
+#clear {
+  position: absolute;
+  right: 20px;
+  top: 3px;
 }
 
 

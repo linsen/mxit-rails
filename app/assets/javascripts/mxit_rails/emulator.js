@@ -35,23 +35,17 @@ Emulator = (function() {
 
     setCookie: function() {
       // Create cookies.  Use only lowercase cookie names - the server expects this (case insensitivity seems dodgy)
-      $.cookie('x-mxit-login', localStorage.getItem('mxit-login'), {path: '/'});
       $.cookie('x-mxit-userid-r', localStorage.getItem('mxit-id'), {path: '/'});
+      $.cookie('x-mxit-login', localStorage.getItem('mxit-login'), {path: '/'});
       $.cookie('x-mxit-nick', localStorage.getItem('mxit-nick'), {path: '/'});
+      $.cookie('x-mxit-contact', localStorage.getItem('mxit-contact'), {path: '/'});
+      $.cookie('x-mxit-location', localStorage.getItem('mxit-location'), {path: '/'});
+      $.cookie('x-mxit-profile', localStorage.getItem('mxit-profile'), {path: '/'});
       $.cookie('x-mxit-device-info', localStorage.getItem('mxit-distribution-code') + ',' + localStorage.getItem('mxit-msisdn'), {path: '/'});
 
-      if (MXIT_PATH && (MXIT_PATH != ''))
-        Emulator.setUrl(MXIT_PATH);
-      else
-        Emulator.home();
-    },
+      $.cookie('ua-pixels', '240x320', {path: '/'});
+      $.cookie('x-device-user-agent', 'EMULATOR', {path: '/'});
 
-    clearCookie: function() {
-      // Create cookies.  Use only lowercase cookie names - the server expects this (case insensitivity seems dodgy)
-      $.cookie('x-mxit-login', null, {path: '/'});
-      $.cookie('x-mxit-userid-r', null, {path: '/'});
-      $.cookie('x-mxit-nick', null, {path: '/'});
-      $.cookie('x-mxit-device-info', null, {path: '/'});
 
       if (MXIT_PATH && (MXIT_PATH != ''))
         Emulator.setUrl(MXIT_PATH);
@@ -86,8 +80,9 @@ Emulator = (function() {
     editCredentials: function() {
       $('#center').hide();
       $('#inputs').show();
+      $('#link').hide();
 
-      values = ['id', 'login', 'nick', 'distribution-code', 'msisdn'];
+      values = ['id', 'login', 'nick', 'contact', 'location', 'profile', 'distribution-code', 'msisdn'];
       for (var i in values) {
         var str = values[i];
         var value = localStorage.getItem('mxit-' + str);
@@ -95,15 +90,27 @@ Emulator = (function() {
       }
     },
 
-    saveCredentials: function() {
-      values = ['id', 'login', 'nick', 'distribution-code', 'msisdn'];
+    clearCredentials: function() {
+      values = ['id', 'login', 'nick', 'contact', 'location', 'profile', 'distribution-code', 'msisdn'];
       for (var i in values) {
         var str = values[i];
-        localStorage.setItem('mxit-' + str, $('#mxit-' + str + '-input').val());
+        $('#mxit-' + str + '-input').val('');
+      }
+    },
+
+    saveCredentials: function() {
+      values = ['id', 'login', 'nick', 'contact', 'location', 'profile',, 'distribution-code', 'msisdn'];
+      for (var i in values) {
+        var str = values[i];
+        var val = $('#mxit-' + str + '-input').val();
+        if (val == '')
+          val = $('#mxit-' + str + '-input').attr('placeholder');
+        localStorage.setItem('mxit-' + str, val);
       }
 
       $('#inputs').hide();
       $('#center').show();
+      $('#link').show();
       Emulator.setCredentials();
     },
 

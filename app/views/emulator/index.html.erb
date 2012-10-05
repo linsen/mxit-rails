@@ -45,33 +45,47 @@
   <div id="phone">
     <div id="screen">
       <iframe id="center" class="content" onLoad="Emulator.updateIframe()"></iframe>
-
-      <div id="inputs">
-        <div>
-          <label for="mxit-id-input">Mxit ID</label>
-          <input type="text" placeholder="Mxit ID" id="mxit-id-input" value="m987654321" />
-        </div>
-        <div>
-          <label for="mxit-login-input">Mxit Login</label>
-          <input type="text" placeholder="Mxit Login" id="mxit-login-input"/>
-        </div>
-        <div>
-          <label for="mxit-nick-input">Display Name (Nick)</label>
-          <input type="text" placeholder="Nickname" id="mxit-nick-input"/>
-        </div>
-        <div>
-          <label for="mxit-distribution-code-input">Distribution Code</label>
-          <input type="text" placeholder="Distribution Code" id="mxit-distribution-code-input" value="DISTRO_CODE"/>
-        </div>
-        <div>
-          <label for="mxit-msisdn-input">MSISDN (Cell No)</label>
-          <input type="text" placeholder="MSISDN" id="mxit-msisdn-input" />
-        </div>
-
-        <a id="save" class="go link" onclick="Emulator.saveCredentials()">Save <span class="icon"><span class="image"></span></span></a>
-      </div>
     </div>
     <input id="phone-input" type="text" autocomplete="off" />
+  </div>
+
+  <div id="inputs">
+    <a id="clear" class="go link" onclick="Emulator.clearCredentials()">Clear All <span class="icon"><span class="image"></span></span></a>
+    <div>
+      <label for="mxit-id-input">Mxit ID</label>
+      <input type="text" placeholder="m987654321" id="mxit-id-input" />
+    </div>
+    <div>
+      <label for="mxit-login-input">Mxit Login</label>
+      <input type="text" placeholder="MxitLogin" id="mxit-login-input"/>
+    </div>
+    <div>
+      <label for="mxit-nick-input">Display Name (Nick)</label>
+      <input type="text" placeholder="Nickname" id="mxit-nick-input"/>
+    </div>
+    <div>
+      <label for="mxit-contact-input">Contact</label>
+      <input type="text" placeholder="ContactName" id="mxit-contact-input" />
+    </div>
+    <div>
+      <label for="mxit-location-input">Location</label>
+      <input type="text" placeholder="ZA,South Africa,11,Western Cape,23,Kraaifontein,88,13072382,8fbe253" id="mxit-location-input" />
+    </div>
+    <div>
+      <label for="mxit-profile-input">Profile</label>
+      <input type="text" placeholder="en,ZA,1984-01-01,male,1" id="mxit-profile-input" />
+    </div>
+    <div>
+      <label for="mxit-distribution-code-input">Distribution Code - Only available to authorised apps</label>
+      <input type="text" placeholder="DISTRO_CODE" id="mxit-distribution-code-input" />
+    </div>
+    <div>
+      <label for="mxit-msisdn-input">MSISDN (Cell No) - Only available to authorised apps</label>
+      <input type="text" placeholder="27820123456" id="mxit-msisdn-input" />
+    </div>
+
+    <p>Leave fields blank to set them to the default value</p>
+    <a id="save" class="go link" onclick="Emulator.saveCredentials()">Save <span class="icon"><span class="image"></span></span></a>
   </div>
 
   <div id="fadeout"></div>
