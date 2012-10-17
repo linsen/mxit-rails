@@ -131,7 +131,9 @@ module MxitRails::MxitApi
     ### API methods requiring authorisation.
 
     # When sending as the app the `message/send` scope is required otherwise `message/user`
-    def send_message(from, to, body, contains_markup, options={ auth_token: nil })
+    def send_message(from, to, body, contains_markup, options={ spool: true,
+      spool_timeout: 60*60*24*7, auth_token: nil })
+
       auth_token = options[:auth_token] || @auth_token
 
       if from == @app_name
@@ -145,13 +147,16 @@ module MxitRails::MxitApi
         request = Net::HTTP::Post.new(path)
         set_api_headers(request, auth_token.access_token)
 
+        spool = options[:spool].nil? ? true : options[:spool]
+        spool_timeout = options[:spool_timeout] || 60*60*24*7
+
         request.body = {
           "Body" => body,
           "ContainsMarkup" => contains_markup,
           "From" => from,
-          "To" => to
-          # "Spool" => default(true)
-          # "SpoolTimeOut" => default(60*60*24*7)
+          "To" => to,
+          "Spool" => spool,
+          "SpoolTimeOut" => spool_timeout
         }.to_json
 
         http.request(request)
@@ -172,7 +177,7 @@ module MxitRails::MxitApi
     #   @Pending - Return all entries that is waiting to be accepted by the other party
     #   @Deleted - Return all entries that was deleted
     #   @Blocked - Return all entries that was blocked
-    def get_contact_list(filter, options={ :skip => nil, :count => nil, :auth_token => nil })
+    def get_contact_list(filter, options={ skip: nil, count: nil, auth_token: nil })
       auth_token = options[:auth_token] || @auth_token
       check_auth_token(auth_token, ["graph/read"])
 
