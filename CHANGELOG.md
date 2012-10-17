@@ -1,3 +1,23 @@
+0.4.0 (17 Oct 2012)
+-------------------
+Bugfixes:
+- get_contact_list's skip and count parameters were not being used
+
+Refactoring:
+- Moved API response parsing/handling to a method
+
+Features:
+- Implemented the recommend API call
+- The spooling options are now configurable on the send_message call
+
+Improvements:
+- Properly parsed error messages are now provided with API exceptions
+
+Breaking changes:
+- Moved the wrapper to its own module "MxitApi"
+- send_message's optional parameters are now in an options hash
+
+
 0.3.3 (5 Oct 2012)
 ------------------
 Bugfixes:
