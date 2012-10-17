@@ -175,6 +175,29 @@ module MxitApi
       handle_response(response)
     end
 
+    def recommend_app(callback_url, from_user_id, to_user_id, message, options={ auth_token: nil })
+      auth_token = options[:auth_token] || @auth_token
+      check_auth_token(auth_token, ["contact/recommend"])
+
+      response = http_client(MXIT_API_URI + "/user/recommend") do |http, path|
+
+        request = Net::HTTP::Post.new(path)
+        set_api_headers(request, auth_token.access_token)
+
+        request.body = {
+          "Application" => @app_name,
+          "CallbackUrl" => callback_url,
+          "FromUserId" => from_user_id,
+          "ToUserId" => to_user_id,
+          "Message" => message
+        }.to_json
+
+        http.request(request)
+      end
+
+      handle_response(response)
+    end
+
     def batch_notify_users(mxit_ids, message, contains_markup)
       Rails.logger.info('Requesting MXit API auth...')
       request_app_auth(["message/send"])
