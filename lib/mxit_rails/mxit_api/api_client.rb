@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'json'
 
 module MxitRails::MxitApi
   class Client
@@ -33,13 +34,7 @@ module MxitRails::MxitApi
         http.request(request)
       end
 
-      case response
-      when Net::HTTPSuccess then
-        @auth_token = AuthToken.new(JSON.parse(response.body))
-
-      else
-        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
-      end
+      @auth_token = AuthToken.new(handle_response(response))
     end
 
     # The user's response to the authorisation code request will be redirected to `redirect_uri`. If
@@ -79,13 +74,7 @@ module MxitRails::MxitApi
         http.request(request)
       end
 
-      case response
-      when Net::HTTPSuccess then
-        @auth_token = AuthToken.new(JSON.parse(response.body))
-
-      else
-        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
-      end
+      @auth_token = AuthToken.new(handle_response(response))
     end
 
     def revoke_token(auth_token)
@@ -98,9 +87,7 @@ module MxitRails::MxitApi
         http.request(request)
       end
 
-      if response.code != '200'
-        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
-      end
+      handle_response(response)
     end
 
     def refresh_token(auth_token)
@@ -119,13 +106,7 @@ module MxitRails::MxitApi
         http.request(request)
       end
 
-      case response
-      when Net::HTTPSuccess then
-        auth_token = AuthToken.new(JSON.parse(response.body))
-
-      else
-        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
-      end
+      handle_response(response)
     end
 
     ### API methods requiring authorisation.
@@ -162,9 +143,7 @@ module MxitRails::MxitApi
         http.request(request)
       end
 
-      if response.code != '200'
-        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
-      end
+      handle_response(response)
     end
 
     # The following filter parameters are available (only one can be specified at a time):
@@ -194,13 +173,7 @@ module MxitRails::MxitApi
         http.request(request)
       end
 
-      case response
-      when Net::HTTPSuccess then
-        data = JSON.parse(response.body)
-
-      else
-        raise MxitRails::MxitApi::RequestException.new(response.message, response.code)
-      end
+      handle_response(response)
     end
 
     def batch_notify_users(mxit_ids, message, contains_markup)
@@ -257,6 +230,28 @@ module MxitRails::MxitApi
         elsif not auth_token.has_scopes? scopes
           raise MxitRails::MxitApi::Exception.new("The auth token doesn't have the required " +
             "scope(s).")
+        end
+      end
+
+      def handle_response(response)
+        begin
+          data = JSON.parse(response.body)
+        rescue JSON::ParserError
+          data = {}
+        end
+
+        case response
+        when Net::HTTPSuccess then
+          data
+
+        when Net::HTTPBadRequest, Net::HTTPUnauthorized, Net::HTTPForbidden then
+          error_message = "#{response.code}::#{response.message}"
+          error_message += " - #{data["error"]}: #{data["error_description"]}" if not data.empty?
+          raise MxitRails::MxitApi::RequestException.new(error_message, response.code), error_message
+
+        else
+          raise MxitRails::MxitApi::RequestException.new(response.message, response.code),
+            "#{response.code}::#{response.message}"
         end
       end
 
