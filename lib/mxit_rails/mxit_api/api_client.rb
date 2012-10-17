@@ -229,7 +229,7 @@ module MxitRails::MxitApi
           raise MxitRails::MxitApi::Exception.new("No auth token has been set/provided.")
         elsif not auth_token.has_scopes? scopes
           raise MxitRails::MxitApi::Exception.new("The auth token doesn't have the required " +
-            "scope(s).")
+            "scope(s): " + scopes.join(","))
         end
       end
 
