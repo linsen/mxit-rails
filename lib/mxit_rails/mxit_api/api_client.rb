@@ -186,12 +186,12 @@ module MxitRails::MxitApi
       i = 0
       while i < mxit_ids.count
         current_batch = mxit_ids[i, batch_size]
-        i += batch_size
+        i += current_batch.count 
 
         to = current_batch.join(',')
         send_message(@app_name, to, message, contains_markup)
 
-        Rails.logger.info("Total users notified: " + current_batch.count.to_s)
+        Rails.logger.info("Total users notified: " + i.to_s)
       end
       Rails.logger.info('Finished notifying!')
     end
