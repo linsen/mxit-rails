@@ -60,7 +60,7 @@
     <% end %>
 
   <% elsif @_mxit.proceed %>
-    <%= mxit_proceed link_to(@_mxit.proceed.to_s.capitalize, "#{request.path}?_mxit_rails_submit=true}") %>
+    <%= mxit_proceed link_to(@_mxit.proceed.to_s.capitalize, "#{request.path}?_mxit_rails_submit=true") %>
   <% end %>
 
 
