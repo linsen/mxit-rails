@@ -185,8 +185,8 @@ module MxitRails::MxitApi
 
         parameters = { :filter => filter }
         # skip and count are optional
-        parameters[:skip] = skip if options[:skip]
-        parameters[:count] = count if options[:count]
+        parameters[:skip] = options[:skip] if options[:skip]
+        parameters[:count] = options[:count] if options[:count]
 
         request = Net::HTTP::Get.new(path + "?#{URI.encode_www_form(parameters)}")
         set_api_headers(request, auth_token.access_token)
