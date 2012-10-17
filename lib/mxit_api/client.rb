@@ -2,7 +2,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 
-module MxitRails::MxitApi
+module MxitApi
   class Client
     MXIT_AUTH_BASE_URI = 'https://auth.mxit.com'
     MXIT_AUTH_TOKEN_URI = MXIT_AUTH_BASE_URI + '/token'
@@ -21,7 +21,7 @@ module MxitRails::MxitApi
 
     def request_app_auth(scopes)
       if scopes.empty?
-        raise MxitRails::MxitApi::Exception.new("No scopes were provided.")
+        raise MxitApi::Exception.new("No scopes were provided.")
       end
 
       response = http_client(MXIT_AUTH_TOKEN_URI) do |http, path|
@@ -45,7 +45,7 @@ module MxitRails::MxitApi
     # scopes - list of scopes to which access is required
     def user_code_request_uri(redirect_uri, state, scopes)
       if scopes.empty?
-        raise MxitRails::MxitApi::Exception.new("No scopes were provided.")
+        raise MxitApi::Exception.new("No scopes were provided.")
       end
 
       # build parameters
@@ -92,8 +92,7 @@ module MxitRails::MxitApi
 
     def refresh_token(auth_token)
       if auth_token.refresh_token.nil?
-        raise MxitRails::MxitApi::Exception.new("The provided auth token doesn't have a refresh " +
-          "token.")
+        raise MxitApi::Exception.new("The provided auth token doesn't have a refresh token.")
       end
 
       response = http_client(MXIT_AUTH_TOKEN_URI) do |http, path|
@@ -226,10 +225,10 @@ module MxitRails::MxitApi
 
       def check_auth_token(auth_token, scopes)
         if auth_token.nil?
-          raise MxitRails::MxitApi::Exception.new("No auth token has been set/provided.")
+          raise MxitApi::Exception.new("No auth token has been set/provided.")
         elsif not auth_token.has_scopes? scopes
-          raise MxitRails::MxitApi::Exception.new("The auth token doesn't have the required " +
-            "scope(s): " + scopes.join(","))
+          raise MxitApi::Exception.new("The auth token doesn't have the required scope(s): " +
+            scopes.join(","))
         end
       end
 
@@ -247,10 +246,10 @@ module MxitRails::MxitApi
         when Net::HTTPBadRequest, Net::HTTPUnauthorized, Net::HTTPForbidden then
           error_message = "#{response.code}::#{response.message}"
           error_message += " - #{data["error"]}: #{data["error_description"]}" if not data.empty?
-          raise MxitRails::MxitApi::RequestException.new(error_message, response.code), error_message
+          raise MxitApi::RequestException.new(error_message, response.code), error_message
 
         else
-          raise MxitRails::MxitApi::RequestException.new(response.message, response.code),
+          raise MxitApi::RequestException.new(response.message, response.code),
             "#{response.code}::#{response.message}"
         end
       end

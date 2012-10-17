@@ -1,4 +1,4 @@
-module MxitRails::MxitApi
+module MxitApi
   class Exception < Exception
     attr_reader :message
     def initialize(message)

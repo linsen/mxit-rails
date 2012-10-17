@@ -10,7 +10,4 @@ require "mxit_rails/page"
 module MxitRails
 end
 
-require "mxit_rails/mxit_api/api_client"
-require "mxit_rails/mxit_api/auth_token"
-require "mxit_rails/mxit_api/mxit_api_exception"
-require "mxit_rails/mxit_api/request_exception"
+require 'mxit-api'
