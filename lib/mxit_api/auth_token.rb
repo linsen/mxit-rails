@@ -1,4 +1,4 @@
-module MxitRails::MxitApi
+module MxitApi
   class AuthToken
     attr_reader :access_token, :type, :expires_in, :refresh_token, :expires_at,
       :refresh_token_expires_at
