@@ -131,8 +131,8 @@ module MxitRails::MxitApi
     ### API methods requiring authorisation.
 
     # When sending as the app the `message/send` scope is required otherwise `message/user`
-    def send_message(from, to, body, contains_markup, auth_token=nil)
-      auth_token = auth_token || @auth_token
+    def send_message(from, to, body, contains_markup, options={ auth_token: nil })
+      auth_token = options[:auth_token] || @auth_token
 
       if from == @app_name
         check_auth_token(auth_token, ["message/send"])
