@@ -198,6 +198,8 @@ module MxitApi
       handle_response(response)
     end
 
+    # When the Mxit API returns 400::Bad Request due to a non-existent Mxit ID in the batch the rest
+    # of the IDs still receive the message.
     def batch_notify_users(mxit_ids, message, contains_markup, options={ spool: true,
       spool_timeout: 60*60*24*7 })
 
@@ -213,7 +215,13 @@ module MxitApi
         i += current_batch.count 
 
         to = current_batch.join(',')
-        send_message(@app_name, to, message, contains_markup, options)
+        begin
+          send_message(@app_name, to, message, contains_markup, options)
+        rescue Exception => exception
+          Rails.logger.error("The following batch caused an exception during send message:" +
+            "\n\t#{to}")
+          Rails.logger.error(exception.message)
+        end
 
         Rails.logger.info("Total users notified: " + i.to_s)
       end
@@ -261,21 +269,21 @@ module MxitApi
         begin
           data = JSON.parse(response.body)
         rescue JSON::ParserError
-          data = {}
+          body = response.body
+          # Unescape unicode characters.
+          body = body.gsub(/\\u([\da-fA-F]{4})/) {|m| [$1].pack("H*").unpack("n*").pack("U*")}
+
+          data = { "error" => "Error", "error_description" => body }
         end
 
         case response
         when Net::HTTPSuccess then
           data
 
-        when Net::HTTPBadRequest, Net::HTTPUnauthorized, Net::HTTPForbidden then
+        else
           error_message = "#{response.code}::#{response.message}"
           error_message += " - #{data["error"]}: #{data["error_description"]}" if not data.empty?
           raise MxitApi::RequestException.new(error_message, response.code), error_message
-
-        else
-          raise MxitApi::RequestException.new(response.message, response.code),
-            "#{response.code}::#{response.message}"
         end
       end
 
