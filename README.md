@@ -7,7 +7,7 @@ an elegant way to support Mxit's conversation-based interface.
 
 It also includes a browser-based *emulator* with a lot of functionality to simplify and streamline the development process.
 
-Later versions will also include wrappers for important Mxit APIs.
+A wrapper for some of Mxit's APIs is included.
 
 See the [ChangeLog](https://github.com/linsen/mxit-rails/blob/master/CHANGELOG.md) for latest changes.
 
@@ -160,3 +160,13 @@ The gem automatically parses (some) Mxit headers and makes them available in the
     - Note that spaces are converted to `+` characters, and `+` characters are not escaped, so if the user enters a `+` it will appear as a space in rails.
     - This field wil *only* be set if the user enters text that is not a link on the page (case sensitive match to the link text), and if there isn't a form input on the page.
 
+
+Mxit API Wrapper
+----------------
+The Mxit API client can be configured through an initializer, eg.
+
+    MxitApi.configure do |config|
+      config.mxit_app_name = "app_name"
+      config.mxit_api_client_id = "your_client_id"
+      config.mxit_api_client_secret = "your_client_secret"
+    end

@@ -1,3 +1,15 @@
+0.4.1 (18 Oct 2012)
+-------------------
+Improvements:
+- Exceptions are now caught per batch in `batch_notify_users`
+- More API exception message parsing
+
+Features:
+- Made the API wrapper configurable through an initializer
+- The spooling options are now configurable on the `batch_notify_users` call
+- All controllers are now extended with helpers to initiate the `MxitApi::Client` and store auth tokens in a user's session
+
+
 0.4.0 (17 Oct 2012)
 -------------------
 Bugfixes:
