@@ -3,6 +3,7 @@ require "mxit_api/auth_token"
 require "mxit_api/exception"
 require "mxit_api/request_exception"
 require "mxit_api/config"
+require "mxit_api/controller_extensions"
 
 module MxitApi
   extend self
@@ -21,3 +22,7 @@ module MxitApi
 end
 
 MxitApi.configure {}
+
+class ActionController::Base
+  ActionController::Base.send(:include, MxitApi::ControllerExtensions)
+end
