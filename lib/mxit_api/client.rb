@@ -198,7 +198,9 @@ module MxitApi
       handle_response(response)
     end
 
-    def batch_notify_users(mxit_ids, message, contains_markup)
+    def batch_notify_users(mxit_ids, message, contains_markup, options={ spool: true,
+      spool_timeout: 60*60*24*7 })
+
       Rails.logger.info('Requesting MXit API auth...')
       request_app_auth(["message/send"])
       Rails.logger.info('Finished MXit API auth.')
@@ -211,7 +213,7 @@ module MxitApi
         i += current_batch.count 
 
         to = current_batch.join(',')
-        send_message(@app_name, to, message, contains_markup)
+        send_message(@app_name, to, message, contains_markup, options)
 
         Rails.logger.info("Total users notified: " + i.to_s)
       end
