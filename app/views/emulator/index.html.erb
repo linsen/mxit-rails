@@ -7,7 +7,7 @@
     <%= stylesheet_link_tag "mxit_rails/emulator" %>
     <%= javascript_include_tag "mxit_rails/emulator" %>
 
-    <link rel="icon" type="image/x-icon" href="<%= image_path("mxit_rails/favicon.ico");  %>" />
+    <link rel="icon" type="image/x-icon" href="<%= path_to_image("mxit_rails/favicon.ico");  %>" />
 
     <script type="text/javascript">
       MXIT_ROOT = '<%= @root_path %>';
@@ -16,12 +16,12 @@
 
     <!-- The asset image-path helper isn't working in scss files, so moving those to here. sigh. -->
     <style type="text/css">
-      #phone { background: url(<%= image_path("mxit_rails/nokia-5310-frame.png") %>) no-repeat; }
-      .go > .icon .image  { background-image: url(<%= image_path("mxit_rails/go.png");  %>) }
-      .in > .icon .image  { background-image: url(<%= image_path("mxit_rails/in.png");  %>) }
-      .out > .icon .image { background-image: url(<%= image_path("mxit_rails/out.png"); %>) }
-      .refresh > .icon .image { background-image: url(<%= image_path("mxit_rails/refresh.png"); %>) }
-      .home > .icon .image { background-image: url(<%= image_path("mxit_rails/home.png"); %>) }
+      #phone { background: url(<%= path_to_image("mxit_rails/nokia-5310-frame.png") %>) no-repeat; }
+      .go > .icon .image  { background-image: url(<%= path_to_image("mxit_rails/go.png");  %>) }
+      .in > .icon .image  { background-image: url(<%= path_to_image("mxit_rails/in.png");  %>) }
+      .out > .icon .image { background-image: url(<%= path_to_image("mxit_rails/out.png"); %>) }
+      .refresh > .icon .image { background-image: url(<%= path_to_image("mxit_rails/refresh.png"); %>) }
+      .home > .icon .image { background-image: url(<%= path_to_image("mxit_rails/home.png"); %>) }
     </style>
 </head>
 <body>
