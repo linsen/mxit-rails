@@ -11,7 +11,7 @@
     <!-- Include a CSS file, but only in a browser/emulator, not on mxit -->
     <%= stylesheet_link_tag "mxit_rails/included" %>
     <style type="text/css">
-      .emulator .emoticon { background-image: url(<%= image_path("mxit_rails/emoticons.png"); %>) }
+      .emulator .emoticon { background-image: url(<%= path_to_image("mxit_rails/emoticons.png"); %>) }
       a:focus { outline: none; <%= mxit_style :link_hover %> }
     </style>
   <% end %>
