@@ -6,7 +6,7 @@ module MxitRails
     end
 
     def self.numeric? input
-      input.gsub! /\s*/, ''
+      input.gsub!(/\s*/, '') if !input.blank?
       return !input.blank? && input.match(/^[0-9]+$/)
     end
 
