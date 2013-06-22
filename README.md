@@ -21,7 +21,7 @@ Installation
 ------------
 To use the gem, just include the gem your rails projects' gemfile:
 
-    gem 'mxit-rails', '~> 0.3.3'
+    gem 'mxit-rails', '~> 0.4.3'
 
 [Heroku](https://devcenter.heroku.com/articles/rails3) provides the simplest way to get a rails app running on the web.
 
